@@ -19,9 +19,15 @@ export default function NewSermonPage() {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
+        const slug = (data.title as string)
+            .toLowerCase()
+            .replace(/[^\w ]+/g, "")
+            .replace(/ +/g, "-");
+
         const { error } = await supabase.from("sermons").insert([
             {
                 title: data.title,
+                slug: slug,
                 preacher_name: data.preacherName || null,
                 series: data.series || null,
                 description: data.description || null,

@@ -1,9 +1,31 @@
-export default function AdminPage() {
+import Link from "next/link";
+import { createServerComponentClient } from "@/lib/supabase/server";
+
+export default async function AdminPage() {
+    const supabase = await createServerComponentClient();
+
+    const { count: memberCount } = await supabase
+        .from("members")
+        .select("*", { count: "exact", head: true });
+
+    const { count: ministryCount } = await supabase
+        .from("ministries")
+        .select("*", { count: "exact", head: true });
+
+    const { count: eventCount } = await supabase
+        .from("events")
+        .select("*", { count: "exact", head: true })
+        .gte("start_at", new Date().toISOString());
+
+    const { count: sermonCount } = await supabase
+        .from("sermons")
+        .select("*", { count: "exact", head: true });
+
     const stats = [
-        { name: "Total Members", value: "0" },
-        { name: "Active Ministries", value: "3" },
-        { name: "Upcoming Events", value: "0" },
-        { name: "Published Sermons", value: "0" },
+        { name: "Total Members", value: memberCount || 0 },
+        { name: "Active Ministries", value: ministryCount || 0 },
+        { name: "Upcoming Events", value: eventCount || 0 },
+        { name: "Published Sermons", value: sermonCount || 0 },
     ];
 
     return (
@@ -30,18 +52,18 @@ export default function AdminPage() {
                 <section className="rounded-lg border border-border p-6 bg-background">
                     <h2 className="text-xl font-semibold mb-4 text-primary">Quick Actions</h2>
                     <div className="grid grid-cols-2 gap-4">
-                        <button className="rounded-md bg-primary/10 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/20 transition-colors">
+                        <Link href="/admin/events/new" className="rounded-md bg-primary/10 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/20 transition-colors text-center">
                             Add Event
-                        </button>
-                        <button className="rounded-md bg-primary/10 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/20 transition-colors">
+                        </Link>
+                        <Link href="/admin/sermons/new" className="rounded-md bg-primary/10 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/20 transition-colors text-center">
                             New Sermon
-                        </button>
-                        <button className="rounded-md bg-secondary/10 px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary/20 transition-colors">
+                        </Link>
+                        <Link href="/admin/members/new" className="rounded-md bg-secondary/10 px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary/20 transition-colors text-center">
                             Add Member
-                        </button>
-                        <button className="rounded-md bg-secondary/10 px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary/20 transition-colors">
+                        </Link>
+                        <Link href="/admin/blog/new" className="rounded-md bg-secondary/10 px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary/20 transition-colors text-center">
                             New Blog Post
-                        </button>
+                        </Link>
                     </div>
                 </section>
 

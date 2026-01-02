@@ -8,9 +8,9 @@ interface AlbumPageProps {
     };
 }
 
-export default async function AlbumDetailPage({ params }: AlbumPageProps) {
+export default async function AlbumDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createServerComponentClient();
-    const { id } = params;
+    const { id } = await params;
 
     const { data: album, error } = await supabase
         .from('photo_albums')
@@ -31,7 +31,7 @@ export default async function AlbumDetailPage({ params }: AlbumPageProps) {
                 <div className="mb-8">
                     <Link
                         href="/gallery"
-                        className="text-church-brown hover:text-church-brown/80 flex items-center mb-4"
+                        className="text-secondary hover:text-secondary/80 flex items-center mb-4"
                     >
                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

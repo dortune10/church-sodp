@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
         const formData = await req.formData();
         const file = formData.get('file') as File;
         const albumId = formData.get('albumId') as string;
+        const folderName = formData.get('folderName') as string;
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -40,11 +41,13 @@ export async function POST(req: NextRequest) {
         const fileExtension = file.name.split('.').pop();
         const fileName = `${uuidv4()}.${fileExtension}`;
 
-        // Ensure gallery directory exists (though we created it, safe to check)
+        // Ensure gallery directory exists
         const galleryDir = join(process.cwd(), 'public', 'images', 'gallery');
 
-        // If albumId is provided, we can sub-directory it
-        const uploadDir = albumId ? join(galleryDir, albumId) : galleryDir;
+        // Determine destination folder: priority = folderName > albumId > base gallery
+        const targetSubDir = folderName || albumId || '';
+        const uploadDir = targetSubDir ? join(galleryDir, targetSubDir) : galleryDir;
+
         await mkdir(uploadDir, { recursive: true });
 
         const filePath = join(uploadDir, fileName);
@@ -53,8 +56,8 @@ export async function POST(req: NextRequest) {
         await writeFile(filePath, buffer);
 
         // 5. Return the public URL path
-        const publicPath = albumId
-            ? `/images/gallery/${albumId}/${fileName}`
+        const publicPath = targetSubDir
+            ? `/images/gallery/${targetSubDir}/${fileName}`
             : `/images/gallery/${fileName}`;
 
         return NextResponse.json({

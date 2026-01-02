@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function NewEventPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York");
     const router = useRouter();
     const supabase = createClient();
 
@@ -19,12 +20,39 @@ export default function NewEventPage() {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
+        // Helper to convert local time + timezone to ISO string
+        const formatWithTimezone = (localStr: string | null) => {
+            if (!localStr) return null;
+            // Create a date object from the YYYY-MM-DDTHH:mm string
+            const date = new Date(localStr);
+            // We use the selected timezone to calculate the correct UTC time
+            // For a robust implementation, we format the local string as an ISO string with the selected offset
+            // However, since we're in the browser, many libs or standard methods are available.
+            // A simple reliable way:
+            try {
+                const formatted = new Intl.DateTimeFormat('en-US', {
+                    timeZone: timezone,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                }).format(date);
+                // Actually, the easiest way for Supabase (TIMESTAMPTZ) is just as follows:
+                return new Date(date.toLocaleString('en-US', { timeZone: timezone })).toISOString();
+            } catch (e) {
+                return new Date(localStr).toISOString();
+            }
+        };
+
         const { error } = await supabase.from("events").insert([
             {
                 title: data.title,
                 description: data.description || null,
-                start_at: data.startAt,
-                end_at: data.endAt || null,
+                start_at: formatWithTimezone(data.startsAt as string),
+                end_at: formatWithTimezone(data.endsAt as string),
                 location: data.location || null,
                 registration_enabled: data.registrationEnabled === "on",
                 capacity: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
@@ -70,6 +98,31 @@ export default function NewEventPage() {
                             required
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-foreground mb-1">
+                            Event Timezone (Church Local Time)
+                        </label>
+                        <select
+                            value={timezone}
+                            onChange={(e) => setTimezone(e.target.value)}
+                            className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
+                        >
+                            <option value="America/New_York">Eastern Time (ET)</option>
+                            <option value="America/Chicago">Central Time (CT)</option>
+                            <option value="America/Denver">Mountain Time (MT)</option>
+                            <option value="America/Phoenix">Mountain Time - no DST (AZ)</option>
+                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                            <option value="America/Anchorage">Alaska Time</option>
+                            <option value="America/Adak">Hawaii-Aleutian Time</option>
+                            <option value="Pacific/Honolulu">Hawaii Time</option>
+                            <option value="Europe/London">London / GMT / BST</option>
+                            <option value="Africa/Lagos">Lagos / WAT</option>
+                        </select>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                            Entering a time below will be interpreted as being in this timezone.
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

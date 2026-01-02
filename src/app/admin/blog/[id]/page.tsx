@@ -44,8 +44,8 @@ export default function EditPostPage() {
         const updateData: any = {
             title: data.title,
             excerpt: data.excerpt || null,
-            content: data.content || null,
-            featured_image: data.featuredImage || null,
+            body: data.content || null,
+            thumbnail_url: data.featuredImage || null,
             status: data.status,
         };
 
@@ -146,7 +146,7 @@ export default function EditPostPage() {
                         <input
                             name="featuredImage"
                             type="url"
-                            defaultValue={post.featured_image || ""}
+                            defaultValue={post.thumbnail_url || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                         />
                     </div>
@@ -158,7 +158,7 @@ export default function EditPostPage() {
                         <textarea
                             name="content"
                             rows={15}
-                            defaultValue={post.content || ""}
+                            defaultValue={post.body || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-base ring-1 ring-border focus:ring-2 focus:ring-primary outline-none font-sans"
                         ></textarea>
                     </div>

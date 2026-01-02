@@ -8,9 +8,9 @@ interface EditAlbumPageProps {
     };
 }
 
-export default async function EditAlbumPage({ params }: EditAlbumPageProps) {
+export default async function EditAlbumPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createServerComponentClient();
-    const { id } = params;
+    const { id } = await params;
 
     const { data: album, error } = await supabase
         .from('photo_albums')

@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { createServerComponentClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createServerComponentClient();
+  const { data: settings } = await supabase.from("settings").select("*");
+
+  const settingsMap = new Map(settings?.map(s => [s.key, s.value]));
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -37,13 +43,14 @@ export default function Home() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-xl font-semibold">Service Times</h3>
-                  <p className="text-muted-foreground">9:00 AM & 11:00 AM</p>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {settingsMap.get('service_times') || '9:00 AM & 11:00 AM'}
+                  </p>
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">Location</h3>
-                  <p className="text-muted-foreground">
-                    123 Church Street<br />
-                    City, State 12345
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {settingsMap.get('address') || '123 Church Street\nCity, State 12345'}
                   </p>
                 </div>
                 <Link

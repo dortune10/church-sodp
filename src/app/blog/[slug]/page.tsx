@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createServerComponentClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -7,13 +7,14 @@ export const dynamic = "force-dynamic";
 export default async function BlogPostDetailPage({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }) {
-    const supabase = createClient();
+    const { slug } = await params;
+    const supabase = await createServerComponentClient();
     const { data: post } = await supabase
         .from("blog_posts")
         .select("*, profiles(full_name)")
-        .eq("slug", params.slug)
+        .eq("slug", slug)
         .single();
 
     if (!post) {
@@ -56,11 +57,11 @@ export default async function BlogPostDetailPage({
             </section>
 
             {/* Featured Image */}
-            {post.featured_image && (
+            {post.thumbnail_url && (
                 <section className="container mx-auto px-4 max-w-5xl mb-16">
                     <div className="aspect-[21/9] rounded-[40px] overflow-hidden shadow-2xl border border-border">
                         <img
-                            src={post.featured_image}
+                            src={post.thumbnail_url}
                             alt={post.title}
                             className="w-full h-full object-cover"
                         />
@@ -72,7 +73,7 @@ export default async function BlogPostDetailPage({
             <section className="pb-20">
                 <div className="container mx-auto px-4 max-w-3xl">
                     <div className="prose prose-lg md:prose-xl max-w-none text-muted-foreground leading-relaxed whitespace-pre-wrap font-serif">
-                        {post.content || "This post has no content yet."}
+                        {post.body || "This post has no content yet."}
                     </div>
 
                     <hr className="my-16 border-border" />

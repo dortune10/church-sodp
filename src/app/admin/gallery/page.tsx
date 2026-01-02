@@ -51,7 +51,16 @@ export default async function AdminGalleryPage() {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="ml-4 flex-shrink-0">
+                                    <div className="ml-4 flex-shrink-0 flex items-center space-x-4">
+                                        <Link
+                                            href={`/admin/gallery/new?albumId=${album.id}`}
+                                            className="text-church-brown hover:bg-church-brown/10 p-2 rounded-full transition-colors group"
+                                            title="Quick Upload Photos"
+                                        >
+                                            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                            </svg>
+                                        </Link>
                                         <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                                         </svg>

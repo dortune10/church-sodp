@@ -35,9 +35,9 @@ export default async function BlogPage() {
                                     className="group block bg-background border border-border rounded-3xl overflow-hidden hover:shadow-xl transition-all h-full flex flex-col"
                                 >
                                     <div className="aspect-[16/9] bg-muted relative overflow-hidden">
-                                        {post.featured_image ? (
+                                        {post.thumbnail_url ? (
                                             <img
-                                                src={post.featured_image}
+                                                src={post.thumbnail_url}
                                                 alt={post.title}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />

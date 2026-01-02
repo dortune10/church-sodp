@@ -1,25 +1,30 @@
 import Link from "next/link";
+import { createServerComponentClient } from "@/lib/supabase/server";
 
-export default function Footer() {
+export default async function Footer() {
+    const supabase = await createServerComponentClient();
+    const { data: settings } = await supabase.from("settings").select("*");
+
+    const settingsMap = new Map(settings?.map(s => [s.key, s.value]));
+
     return (
         <footer className="w-full border-t border-border bg-muted/50 py-12">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
                     <div>
                         <h3 className="text-lg font-bold text-primary mb-4">Church Name</h3>
-                        <p className="text-muted-foreground">
-                            Address Line 1<br />
-                            City, State, Zip<br />
-                            Phone: (555) 123-4567<br />
-                            Email: info@church.com
+                        <p className="text-muted-foreground whitespace-pre-line">
+                            {settingsMap.get('address') || 'Address Line 1\nCity, State, Zip'}
+                            <br />
+                            Phone: {settingsMap.get('phone') || '(555) 123-4567'}<br />
+                            Email: {settingsMap.get('email') || 'info@church.com'}
                         </p>
                     </div>
                     <div>
                         <h3 className="text-lg font-bold text-primary mb-4">Service Times</h3>
-                        <ul className="text-muted-foreground space-y-2">
-                            <li>Sunday Morning: 9:00 AM & 11:00 AM</li>
-                            <li>Wednesday Evening: 7:00 PM</li>
-                        </ul>
+                        <p className="text-muted-foreground whitespace-pre-line">
+                            {settingsMap.get('service_times') || 'Sunday Morning: 9:00 AM & 11:00 AM\nWednesday Evening: 7:00 PM'}
+                        </p>
                     </div>
                     <div>
                         <h3 className="text-lg font-bold text-primary mb-4">Quick Links</h3>

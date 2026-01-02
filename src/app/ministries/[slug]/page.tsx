@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase";
+import { createServerComponentClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -7,13 +7,14 @@ export const dynamic = "force-dynamic";
 export default async function MinistryDetailPage({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }) {
-    const supabase = createClient();
+    const { slug } = await params;
+    const supabase = await createServerComponentClient();
     const { data: ministry } = await supabase
         .from("ministries")
         .select("*, members(full_name)")
-        .eq("slug", params.slug)
+        .eq("slug", slug)
         .single();
 
     if (!ministry) {
