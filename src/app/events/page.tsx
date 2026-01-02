@@ -8,8 +8,8 @@ export default async function EventsPage() {
     const { data: events } = await supabase
         .from("events")
         .select("*")
-        .gte("starts_at", new Date().toISOString())
-        .order("starts_at", { ascending: true });
+        .gte("start_at", new Date().toISOString())
+        .order("start_at", { ascending: true });
 
     return (
         <div className="flex flex-col">
@@ -29,7 +29,7 @@ export default async function EventsPage() {
                     <div className="space-y-8">
                         {events && events.length > 0 ? (
                             events.map((event) => {
-                                const startDate = new Date(event.starts_at);
+                                const startDate = new Date(event.start_at);
                                 return (
                                     <div
                                         key={event.id}

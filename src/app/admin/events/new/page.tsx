@@ -23,12 +23,11 @@ export default function NewEventPage() {
             {
                 title: data.title,
                 description: data.description || null,
-                starts_at: data.startsAt,
-                ends_at: data.endsAt || null,
+                start_at: data.startAt,
+                end_at: data.endAt || null,
                 location: data.location || null,
-                category: data.category || "General",
-                registration_required: data.registrationRequired === "on",
-                max_registrations: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
+                registration_enabled: data.registrationEnabled === "on",
+                capacity: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
             },
         ]);
 
@@ -140,13 +139,13 @@ export default function NewEventPage() {
                     <div className="space-y-4 pt-4 border-t border-border">
                         <div className="flex items-center gap-3">
                             <input
-                                id="registrationRequired"
-                                name="registrationRequired"
+                                id="registrationEnabled"
+                                name="registrationEnabled"
                                 type="checkbox"
                                 className="rounded border-border text-primary focus:ring-primary"
                             />
-                            <label htmlFor="registrationRequired" className="text-sm font-medium text-foreground">
-                                Registration Required
+                            <label htmlFor="registrationEnabled" className="text-sm font-medium text-foreground">
+                                Registration Enabled
                             </label>
                         </div>
                         <div>

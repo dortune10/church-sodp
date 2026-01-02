@@ -8,7 +8,7 @@ export default async function AdminEventsPage() {
     const { data: events, error } = await supabase
         .from("events")
         .select("*, event_registrations(count)")
-        .order("starts_at", { ascending: true });
+        .order("start_at", { ascending: true });
 
     return (
         <div>
@@ -58,8 +58,8 @@ export default async function AdminEventsPage() {
                                         <div className="text-xs text-muted-foreground">{event.category}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                                        {new Date(event.starts_at).toLocaleDateString()} at{" "}
-                                        {new Date(event.starts_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {new Date(event.start_at).toLocaleDateString()} at{" "}
+                                        {new Date(event.start_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                                         {event.location || "Online"}

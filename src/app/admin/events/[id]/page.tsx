@@ -28,8 +28,8 @@ export default function EditEventPage() {
                 // Format dates for input[type="datetime-local"]
                 const formattedEvent = {
                     ...data,
-                    starts_at: data.starts_at ? new Date(data.starts_at).toISOString().slice(0, 16) : "",
-                    ends_at: data.ends_at ? new Date(data.ends_at).toISOString().slice(0, 16) : "",
+                    start_at: data.start_at ? new Date(data.start_at).toISOString().slice(0, 16) : "",
+                    end_at: data.end_at ? new Date(data.end_at).toISOString().slice(0, 16) : "",
                 };
                 setEvent(formattedEvent);
             }
@@ -52,12 +52,11 @@ export default function EditEventPage() {
             .update({
                 title: data.title,
                 description: data.description || null,
-                starts_at: data.startsAt,
-                ends_at: data.endsAt || null,
+                start_at: data.startsAt,
+                end_at: data.endsAt || null,
                 location: data.location || null,
-                category: data.category || "General",
-                registration_required: data.registrationRequired === "on",
-                max_registrations: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
+                registration_enabled: data.registrationEnabled === "on",
+                capacity: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
             })
             .eq("id", id);
 
@@ -138,7 +137,7 @@ export default function EditEventPage() {
                                 name="startsAt"
                                 type="datetime-local"
                                 required
-                                defaultValue={event.starts_at}
+                                defaultValue={event.start_at}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -149,7 +148,7 @@ export default function EditEventPage() {
                             <input
                                 name="endsAt"
                                 type="datetime-local"
-                                defaultValue={event.ends_at}
+                                defaultValue={event.end_at}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -200,14 +199,14 @@ export default function EditEventPage() {
                     <div className="space-y-4 pt-4 border-t border-border">
                         <div className="flex items-center gap-3">
                             <input
-                                id="registrationRequired"
-                                name="registrationRequired"
+                                id="registrationEnabled"
+                                name="registrationEnabled"
                                 type="checkbox"
-                                defaultChecked={event.registration_required}
+                                defaultChecked={event.registration_enabled}
                                 className="rounded border-border text-primary focus:ring-primary"
                             />
-                            <label htmlFor="registrationRequired" className="text-sm font-medium text-foreground">
-                                Registration Required
+                            <label htmlFor="registrationEnabled" className="text-sm font-medium text-foreground">
+                                Registration Enabled
                             </label>
                         </div>
                         <div>
@@ -217,7 +216,7 @@ export default function EditEventPage() {
                             <input
                                 name="maxRegistrations"
                                 type="number"
-                                defaultValue={event.max_registrations || ""}
+                                defaultValue={event.capacity || ""}
                                 className="w-32 rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>

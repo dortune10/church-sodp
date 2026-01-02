@@ -58,7 +58,7 @@ export default function EventDetailPage() {
     if (loading) return <div className="py-20 text-center">Loading event...</div>;
     if (!event) return <div className="py-20 text-center">Event not found.</div>;
 
-    const startDate = new Date(event.starts_at);
+    const startDate = new Date(event.start_at);
 
     return (
         <div className="flex flex-col">

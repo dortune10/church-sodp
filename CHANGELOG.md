@@ -16,6 +16,8 @@ All notable changes to the RCCG SODP Church project will be documented in this f
 - **Blog Module**: Admin and public views for blog posts and status management.
 - **Members Module**: Admin pages for listing and managing church members.
 - **Authentication**: Login, registration, and role-based access control via middleware.
+- **GitHub Integration**: Established remote repository on GitHub and pushed initial implementation.
+- **Project Documentation**: Created and updated `README.md` with features, tech stack, and setup instructions.
 - **Core Infrastructure**: Next.js 15, Supabase integration, and Tailwind CSS configuration.
 
 ### Changed
