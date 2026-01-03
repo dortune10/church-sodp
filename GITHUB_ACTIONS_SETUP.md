@@ -59,6 +59,21 @@ Before creating workflow files, configure the following secrets in your GitHub r
 | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase Project URL | Found in Supabase Dashboard → Project Settings |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase Anon Key | Found in Supabase Dashboard → Project Settings |
 
+### Quick checklist (copy into GitHub → Settings → Secrets → Actions)
+
+- [ ] NEXT_PUBLIC_SUPABASE_URL — Supabase project URL
+- [ ] NEXT_PUBLIC_SUPABASE_ANON_KEY — Supabase anon/public key
+- [ ] SUPABASE_ACCESS_TOKEN — (optional) Supabase CLI personal access token
+- [ ] SUPABASE_PROJECT_ID — (optional) Supabase project ref/id
+- [ ] SUPABASE_DB_PASSWORD — (optional) database password for migrations
+- [ ] VPS_HOST — (optional) VPS host or IP for SSH deploys
+- [ ] VPS_USER — (optional) SSH user for VPS deploys
+- [ ] VPS_SSH_KEY — (optional) private SSH key (paste full multiline key)
+- [ ] DOCKER_USERNAME — (optional) Docker Hub username
+- [ ] DOCKER_PASSWORD — (optional) Docker Hub access token/password
+- [ ] SLACK_WEBHOOK — (optional) Slack webhook for notifications
+
+
 #### **For Database Migrations (OPTIONAL)**
 
 | Secret Name | Value | Description |
@@ -346,6 +361,12 @@ cat ~/.ssh/church-app-deploy
 ```
 
 Then paste the private key content into the `VPS_SSH_KEY` secret.
+
+### Note: Application Port
+
+This project runs on port `3330` by default. The `package.json` scripts have been updated to start the dev and production servers on port `3330`.
+
+When deploying to a VPS, ensure your server's firewall allows inbound traffic on port `3330` or configure a reverse proxy (Nginx) to forward requests from port `80`/`443` to `3330`.
 
 ### Step 5: Commit and Push
 

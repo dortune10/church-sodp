@@ -48,4 +48,4 @@ jobs:
             git pull origin main
             npm ci
             npm run build
-            pm2 restart church-app || pm2 start npm --name church-app -- start
+            pm2 restart church-app || pm2 start npm --name church-app -- start -- -p 3330
