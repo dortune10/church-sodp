@@ -31,8 +31,8 @@ export default function ContactForm() {
 
             setSuccess(true);
             (e.target as HTMLFormElement).reset();
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err) {
+            setError((err as Error).message);
         } finally {
             setLoading(false);
         }

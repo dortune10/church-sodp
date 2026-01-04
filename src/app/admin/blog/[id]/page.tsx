@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { BlogPost } from "@/types/database";
 
 export default function EditPostPage() {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [post, setPost] = useState<any>(null);
+    const [post, setPost] = useState<BlogPost | null>(null);
     const router = useRouter();
     const supabase = createClient();
 
@@ -41,16 +42,16 @@ export default function EditPostPage() {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
-        const updateData: any = {
-            title: data.title,
-            excerpt: data.excerpt || null,
-            body: data.content || null,
-            thumbnail_url: data.featuredImage || null,
-            status: data.status,
+        const updateData: Partial<BlogPost> = {
+            title: data.title as string,
+            excerpt: (data.excerpt as string) || null,
+            body: (data.content as string) || null,
+            thumbnail_url: (data.featuredImage as string) || null,
+            status: data.status as 'draft' | 'published',
         };
 
         // If changing from draft to published, set published_at
-        if (post.status === "draft" && data.status === "published") {
+        if (post?.status === "draft" && data.status === "published") {
             updateData.published_at = new Date().toISOString();
         }
 

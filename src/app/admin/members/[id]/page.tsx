@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { Member } from "@/types/database";
 
 export default function EditMemberPage() {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [member, setMember] = useState<any>(null);
+    const [member, setMember] = useState<Member | null>(null);
     const router = useRouter();
     const supabase = createClient();
 
@@ -44,11 +45,11 @@ export default function EditMemberPage() {
         const { error } = await supabase
             .from("members")
             .update({
-                full_name: data.fullName,
-                email: data.email || null,
-                phone: data.phone || null,
-                address: data.address || null,
-                status: data.status || "active",
+                full_name: data.fullName as string,
+                email: (data.email as string) || null,
+                phone: (data.phone as string) || null,
+                address: (data.address as string) || null,
+                status: (data.status as string) || "active",
             })
             .eq("id", id);
 
@@ -115,7 +116,7 @@ export default function EditMemberPage() {
                             name="fullName"
                             type="text"
                             required
-                            defaultValue={member.full_name}
+                            defaultValue={member?.full_name}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         />
                     </div>
@@ -128,7 +129,7 @@ export default function EditMemberPage() {
                             <input
                                 name="email"
                                 type="email"
-                                defaultValue={member.email || ""}
+                                defaultValue={member?.email || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -139,7 +140,7 @@ export default function EditMemberPage() {
                             <input
                                 name="phone"
                                 type="tel"
-                                defaultValue={member.phone || ""}
+                                defaultValue={member?.phone || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -152,7 +153,7 @@ export default function EditMemberPage() {
                         <textarea
                             name="address"
                             rows={3}
-                            defaultValue={member.address || ""}
+                            defaultValue={member?.address || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         ></textarea>
                     </div>
@@ -163,7 +164,7 @@ export default function EditMemberPage() {
                         </label>
                         <select
                             name="status"
-                            defaultValue={member.status}
+                            defaultValue={member?.status}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         >
                             <option value="active">Active</option>

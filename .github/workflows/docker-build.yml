@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     
     steps:
       - name: Checkout code
@@ -28,7 +30,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/church-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/church-app:${{ github.sha }}
+            ${{ env.DOCKERHUB_USERNAME }}/church-app:latest
+            ${{ env.DOCKERHUB_USERNAME }}/church-app:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

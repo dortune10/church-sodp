@@ -1,12 +1,7 @@
 import { createServerComponentClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-
-interface AlbumPageProps {
-    params: {
-        id: string;
-    };
-}
+import { Photo } from '@/types/database';
 
 export default async function AlbumDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const supabase = await createServerComponentClient();
@@ -45,11 +40,12 @@ export default async function AlbumDetailPage({ params }: { params: Promise<{ id
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {album.photos?.map((photo: any) => (
+                    {album.photos?.map((photo: Photo) => (
                         <div
                             key={photo.id}
                             className="relative aspect-square rounded-lg overflow-hidden group cursor-pointer"
                         >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={photo.storage_path}
                                 alt={photo.caption || album.title}

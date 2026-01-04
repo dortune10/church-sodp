@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { Event as ChurchEvent } from "@/types/database";
+
+interface FormattedEvent extends Omit<ChurchEvent, 'start_at' | 'end_at'> {
+    start_at: string;
+    end_at: string;
+}
 
 export default function EditEventPage() {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [event, setEvent] = useState<any>(null);
+    const [event, setEvent] = useState<FormattedEvent | null>(null);
     const router = useRouter();
     const supabase = createClient();
 
@@ -50,11 +56,11 @@ export default function EditEventPage() {
         const { error } = await supabase
             .from("events")
             .update({
-                title: data.title,
-                description: data.description || null,
-                start_at: data.startsAt,
-                end_at: data.endsAt || null,
-                location: data.location || null,
+                title: data.title as string,
+                description: (data.description as string) || null,
+                start_at: data.startsAt as string,
+                end_at: (data.endsAt as string) || null,
+                location: (data.location as string) || null,
                 registration_enabled: data.registrationEnabled === "on",
                 capacity: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
             })
@@ -123,7 +129,7 @@ export default function EditEventPage() {
                             name="title"
                             type="text"
                             required
-                            defaultValue={event.title}
+                            defaultValue={event?.title}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         />
                     </div>
@@ -137,7 +143,7 @@ export default function EditEventPage() {
                                 name="startsAt"
                                 type="datetime-local"
                                 required
-                                defaultValue={event.start_at}
+                                defaultValue={event?.start_at}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -148,7 +154,7 @@ export default function EditEventPage() {
                             <input
                                 name="endsAt"
                                 type="datetime-local"
-                                defaultValue={event.end_at}
+                                defaultValue={event?.end_at}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -162,7 +168,7 @@ export default function EditEventPage() {
                             <input
                                 name="location"
                                 type="text"
-                                defaultValue={event.location || ""}
+                                defaultValue={event?.location || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -172,7 +178,7 @@ export default function EditEventPage() {
                             </label>
                             <select
                                 name="category"
-                                defaultValue={event.category}
+                                defaultValue={event?.category || "General"}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             >
                                 <option value="General">General</option>
@@ -191,7 +197,7 @@ export default function EditEventPage() {
                         <textarea
                             name="description"
                             rows={4}
-                            defaultValue={event.description || ""}
+                            defaultValue={event?.description || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         ></textarea>
                     </div>
@@ -202,7 +208,7 @@ export default function EditEventPage() {
                                 id="registrationEnabled"
                                 name="registrationEnabled"
                                 type="checkbox"
-                                defaultChecked={event.registration_enabled}
+                                defaultChecked={event?.registration_enabled}
                                 className="rounded border-border text-primary focus:ring-primary"
                             />
                             <label htmlFor="registrationEnabled" className="text-sm font-medium text-foreground">
@@ -216,7 +222,7 @@ export default function EditEventPage() {
                             <input
                                 name="maxRegistrations"
                                 type="number"
-                                defaultValue={event.capacity || ""}
+                                defaultValue={event?.capacity || ""}
                                 className="w-32 rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>

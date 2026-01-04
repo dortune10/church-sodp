@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { Sermon } from "@/types/database";
 
 export default function EditSermonPage() {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [sermon, setSermon] = useState<any>(null);
+    const [sermon, setSermon] = useState<Sermon | null>(null);
     const router = useRouter();
     const supabase = createClient();
 
@@ -49,13 +50,13 @@ export default function EditSermonPage() {
         const { error } = await supabase
             .from("sermons")
             .update({
-                title: data.title,
-                preacher_name: data.preacherName || null,
-                series: data.series || null,
-                description: data.description || null,
-                audio_url: data.audioUrl || null,
-                video_url: data.videoUrl || null,
-                preached_at: data.preachedAt,
+                title: data.title as string,
+                preacher_name: (data.preacherName as string) || null,
+                series: (data.series as string) || null,
+                description: (data.description as string) || null,
+                audio_url: (data.audioUrl as string) || null,
+                video_url: (data.videoUrl as string) || null,
+                preached_at: data.preachedAt as string,
             })
             .eq("id", id);
 
@@ -122,7 +123,7 @@ export default function EditSermonPage() {
                             name="title"
                             type="text"
                             required
-                            defaultValue={sermon.title}
+                            defaultValue={sermon?.title}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                         />
                     </div>
@@ -135,7 +136,7 @@ export default function EditSermonPage() {
                             <input
                                 name="preacherName"
                                 type="text"
-                                defaultValue={sermon.preacher_name || ""}
+                                defaultValue={sermon?.preacher_name || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                             />
                         </div>
@@ -146,7 +147,7 @@ export default function EditSermonPage() {
                             <input
                                 name="series"
                                 type="text"
-                                defaultValue={sermon.series || ""}
+                                defaultValue={sermon?.series || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                             />
                         </div>
@@ -160,7 +161,7 @@ export default function EditSermonPage() {
                             name="preachedAt"
                             type="date"
                             required
-                            defaultValue={sermon.preached_at}
+                            defaultValue={sermon?.preached_at}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                         />
                     </div>
@@ -172,7 +173,7 @@ export default function EditSermonPage() {
                         <textarea
                             name="description"
                             rows={4}
-                            defaultValue={sermon.description || ""}
+                            defaultValue={sermon?.description || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                         ></textarea>
                     </div>
@@ -186,7 +187,7 @@ export default function EditSermonPage() {
                             <input
                                 name="audioUrl"
                                 type="url"
-                                defaultValue={sermon.audio_url || ""}
+                                defaultValue={sermon?.audio_url || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                             />
                         </div>
@@ -197,7 +198,7 @@ export default function EditSermonPage() {
                             <input
                                 name="videoUrl"
                                 type="url"
-                                defaultValue={sermon.video_url || ""}
+                                defaultValue={sermon?.video_url || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"
                             />
                         </div>

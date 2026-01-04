@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
+import { Event as ChurchEvent } from "@/types/database";
 
 export default function EventDetailPage() {
     const { id } = useParams();
-    const [event, setEvent] = useState<any>(null);
+    const [event, setEvent] = useState<ChurchEvent | null>(null);
     const [loading, setLoading] = useState(true);
     const [registering, setRegistering] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -39,10 +40,10 @@ export default function EventDetailPage() {
         const { error } = await supabase.from("event_registrations").insert([
             {
                 event_id: id,
-                full_name: data.fullName,
-                email: data.email,
-                phone: data.phone || null,
-                notes: data.notes || null,
+                full_name: data.fullName as string,
+                email: data.email as string,
+                phone: (data.phone as string) || null,
+                notes: (data.notes as string) || null,
             },
         ]);
 
@@ -102,7 +103,7 @@ export default function EventDetailPage() {
                         </div>
 
                         <div>
-                            {event.registration_required ? (
+                            {event.registration_enabled ? (
                                 <div className="bg-muted p-8 rounded-2xl border border-border sticky top-24">
                                     <h3 className="text-xl font-bold mb-6">Event Registration</h3>
 

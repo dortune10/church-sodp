@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Member } from "@/types/database";
 
 export default function NewMinistryPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [members, setMembers] = useState<any[]>([]);
+    const [members, setMembers] = useState<Pick<Member, 'id' | 'full_name'>[]>([]);
     const router = useRouter();
     const supabase = createClient();
 
@@ -38,12 +39,12 @@ export default function NewMinistryPage() {
 
         const { error } = await supabase.from("ministries").insert([
             {
-                name: data.name,
+                name: data.name as string,
                 slug: slug,
-                description: data.description || null,
-                category: data.category || null,
-                schedule: data.schedule || null,
-                leader_id: data.leaderId || null,
+                description: (data.description as string) || null,
+                category: (data.category as string) || null,
+                schedule: (data.schedule as string) || null,
+                leader_id: (data.leaderId as string) || null,
             },
         ]);
 

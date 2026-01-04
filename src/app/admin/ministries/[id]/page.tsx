@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { Ministry, Member } from "@/types/database";
 
 export default function EditMinistryPage() {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [ministry, setMinistry] = useState<any>(null);
-    const [members, setMembers] = useState<any[]>([]);
+    const [ministry, setMinistry] = useState<Ministry | null>(null);
+    const [members, setMembers] = useState<Pick<Member, 'id' | 'full_name'>[]>([]);
     const router = useRouter();
     const supabase = createClient();
 
@@ -45,11 +46,11 @@ export default function EditMinistryPage() {
         const { error } = await supabase
             .from("ministries")
             .update({
-                name: data.name,
-                description: data.description || null,
-                category: data.category || null,
-                schedule: data.schedule || null,
-                leader_id: data.leaderId || null,
+                name: data.name as string,
+                description: (data.description as string) || null,
+                category: (data.category as string) || null,
+                schedule: (data.schedule as string) || null,
+                leader_id: (data.leaderId as string) || null,
             })
             .eq("id", id);
 
@@ -116,7 +117,7 @@ export default function EditMinistryPage() {
                             name="name"
                             type="text"
                             required
-                            defaultValue={ministry.name}
+                            defaultValue={ministry?.name}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         />
                     </div>
@@ -129,7 +130,7 @@ export default function EditMinistryPage() {
                             <input
                                 name="category"
                                 type="text"
-                                defaultValue={ministry.category || ""}
+                                defaultValue={ministry?.category || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
@@ -139,7 +140,7 @@ export default function EditMinistryPage() {
                             </label>
                             <select
                                 name="leaderId"
-                                defaultValue={ministry.leader_id || ""}
+                                defaultValue={ministry?.leader_id || ""}
                                 className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             >
                                 <option value="">Select a leader...</option>
@@ -159,7 +160,7 @@ export default function EditMinistryPage() {
                         <input
                             name="schedule"
                             type="text"
-                            defaultValue={ministry.schedule || ""}
+                            defaultValue={ministry?.schedule || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         />
                     </div>
@@ -171,7 +172,7 @@ export default function EditMinistryPage() {
                         <textarea
                             name="description"
                             rows={5}
-                            defaultValue={ministry.description || ""}
+                            defaultValue={ministry?.description || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         ></textarea>
                     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { PhotoAlbum } from '@/types/database';
 
 function NewAlbumForm() {
     const router = useRouter();
@@ -12,7 +13,7 @@ function NewAlbumForm() {
     const [loading, setLoading] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
-    const [existingAlbum, setExistingAlbum] = useState<any>(null);
+    const [existingAlbum, setExistingAlbum] = useState<PhotoAlbum | null>(null);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -82,11 +83,13 @@ function NewAlbumForm() {
             }
 
             // 2. Upload each file via our local API
+            if (!album) throw new Error('Failed to create or find album.');
+
             for (const file of files) {
                 const uploadFormData = new FormData();
                 uploadFormData.append('file', file);
                 uploadFormData.append('albumId', album.id);
-                uploadFormData.append('folderName', slug);
+                uploadFormData.append('folderName', slug || '');
 
                 const response = await fetch('/api/upload', {
                     method: 'POST',
@@ -197,6 +200,7 @@ function NewAlbumForm() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
                         {previews.map((preview, index) => (
                             <div key={index} className="relative aspect-square rounded-lg overflow-hidden group">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={preview} alt={`Preview ${index}`} className="w-full h-full object-cover" />
                                 <button
                                     type="button"

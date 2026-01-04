@@ -2,6 +2,27 @@
 
 All notable changes to the RCCG SODP Church project will be documented in this file.
 
+## [0.2.0] - 2026-01-03
+
+### Added
+- **Global Error Boundary**: Created `error.tsx` for graceful error handling.
+- **Custom 404 Page**: Created `not-found.tsx` for better user experience.
+- **Docker Deployment**: Added `Dockerfile` and `.dockerignore` for VPS deployment.
+- **Centralized Types**: Created `src/types/database.ts` with interfaces for all database entities.
+
+### Changed
+- **Next.js Configuration**: Updated `next.config.ts` with `output: 'standalone'`, disabled `X-Powered-By` header, and added image remote patterns.
+- **Type Safety**: Replaced `any` types with specific interfaces across 15+ files.
+- **Code Cleanup**: Removed unused imports and variables throughout the codebase.
+
+### Fixed
+- **Lint Errors**: Resolved all ESLint errors (0 errors, 12 warnings remaining).
+- **Schema Mismatch**: Corrected `registration_required` to `registration_enabled` in event pages.
+- **Duplicate Directory**: Removed URL-encoded `%5Bid%5D` duplicate directory.
+
+### Removed
+- **Debug Endpoint**: Deleted `/api/debug-auth` route for security.
+
 ## [Unreleased] - 2025-12-31
 
 ### Added
