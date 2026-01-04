@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:  # Allow manual trigger
   push:
     branches: [main, develop]
   pull_request:
