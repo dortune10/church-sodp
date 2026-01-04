@@ -45,10 +45,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            # Load NVM and Node
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            
             APP_DIR="/home/dotman/projects/church-app"
             REPO_URL="https://github.com/dortune10/church-sodp.git"
             
