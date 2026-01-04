@@ -45,8 +45,32 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/church-app
-            git pull origin main
+            # Load NVM and Node
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            
+            APP_DIR="/home/dotman/projects/church-app"
+            REPO_URL="https://github.com/dortune10/church-sodp.git"
+            
+            # Create directory if not exists
+            mkdir -p /home/dotman/projects
+            
+            # Clone or pull
+            if [ ! -d "$APP_DIR" ]; then
+              echo "Cloning repository..."
+              git clone $REPO_URL $APP_DIR
+            else
+              echo "Pulling latest changes..."
+              cd $APP_DIR
+              git pull origin main
+            fi
+            
+            cd $APP_DIR
+            
+            # Install dependencies and build
             npm ci
             npm run build
+            
+            # Start/restart with PM2
             pm2 restart church-app || pm2 start npm --name church-app -- start -- -p 3330
+            pm2 save
