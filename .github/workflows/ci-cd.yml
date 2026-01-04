@@ -1,12 +1,17 @@
-name: Deploy to Production
+name: CI/CD Pipeline
 
 on:
   workflow_dispatch:  # Allow manual trigger
   push:
-    branches: [main]
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
-  build:
+  # ─────────────────────────────────────
+  # CI: Lint and Build
+  # ─────────────────────────────────────
+  ci:
     runs-on: ubuntu-latest
     
     steps:
@@ -30,11 +35,14 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-  
+
+  # ─────────────────────────────────────
+  # Deploy: Only on main after CI passes
+  # ─────────────────────────────────────
   deploy:
-    needs: build
+    needs: ci
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     
     steps:
       - name: Deploy to VPS
