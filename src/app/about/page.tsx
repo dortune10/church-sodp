@@ -63,6 +63,99 @@ export default async function AboutPage() {
                 </div>
             </section>
 
+            {/* Service Times Section */}
+            <section className="py-20 bg-muted/20">
+                <div className="container mx-auto px-4 max-w-4xl">
+                    <h2 className="text-3xl font-bold text-primary mb-12 text-center">Service Times</h2>
+
+                    {/* Weekly Services */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-bold text-primary mb-6">Weekly Services</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr className="border-b border-border">
+                                        <th className="text-left py-4 px-4 font-bold">Day</th>
+                                        <th className="text-left py-4 px-4 font-bold">Service</th>
+                                        <th className="text-left py-4 px-4 font-bold">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-muted-foreground">
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold" rowSpan={2}>Sunday</td>
+                                        <td className="py-4 px-4">Sunday School</td>
+                                        <td className="py-4 px-4">10:00 AM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4">Sunday Worship</td>
+                                        <td className="py-4 px-4">11:00 AM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold">Tuesday</td>
+                                        <td className="py-4 px-4">Liberation Hour (Counselling, Deliverance and Prayers)</td>
+                                        <td className="py-4 px-4">10:00 AM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold">Wednesday</td>
+                                        <td className="py-4 px-4">Bible Study (Digging Deep)</td>
+                                        <td className="py-4 px-4">7:00 PM - 8:30 PM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold">Thursday</td>
+                                        <td className="py-4 px-4">
+                                            Liberation Hour (Teleconference)<br />
+                                            <span className="text-sm italic">Prayer Line: 515-606-5197, Access Code: 970438#</span>
+                                        </td>
+                                        <td className="py-4 px-4">8:00 PM - 9:00 PM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold">Friday</td>
+                                        <td className="py-4 px-4">Prayer Meeting (Fire on the Altar)</td>
+                                        <td className="py-4 px-4">7:00 PM - 8:30 PM</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Monthly Services */}
+                    <div>
+                        <h3 className="text-2xl font-bold text-primary mb-6">Monthly Services</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr className="border-b border-border">
+                                        <th className="text-left py-4 px-4 font-bold">Day</th>
+                                        <th className="text-left py-4 px-4 font-bold">Service</th>
+                                        <th className="text-left py-4 px-4 font-bold">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-muted-foreground">
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold" rowSpan={3}>Sunday</td>
+                                        <td className="py-4 px-4">Thanksgiving Sunday - Every 1st Sunday of the Month</td>
+                                        <td className="py-4 px-4">10:00 AM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4">Youth Sunday - Every 3rd Sunday of the Month</td>
+                                        <td className="py-4 px-4">10:00 AM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4">Anointing Service - Every Last Sunday of the Month</td>
+                                        <td className="py-4 px-4">10:00 AM</td>
+                                    </tr>
+                                    <tr className="border-b border-border/50">
+                                        <td className="py-4 px-4 font-semibold">Friday</td>
+                                        <td className="py-4 px-4">Vigil Service - Last Friday of the Month</td>
+                                        <td className="py-4 px-4">10:00 PM</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Leadership Section */}
             <section className="py-20 bg-muted/20">
                 <div className="container mx-auto px-4 text-center">

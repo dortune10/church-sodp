@@ -2,7 +2,25 @@
 
 All notable changes to the RCCG SODP Church project will be documented in this file.
 
+## [0.3.0] - 2026-01-03
+
+### Added
+- **GitHub Actions CI/CD**: Consolidated pipeline (`ci-cd.yml`) with lint, build, and VPS deployment.
+- **Docker Build Workflow**: Automated Docker image builds pushed to Docker Hub with Supabase build-args.
+- **Database Migrations Workflow**: Automated Supabase schema migrations via `db-migrations.yml`.
+- **VPS Deployment**: Automated deployment to `/home/dotman/projects/church-app` with PM2 process management.
+- **Manual Workflow Triggers**: Added `workflow_dispatch` to all workflows for manual triggering.
+
+### Changed
+- **Dockerfile**: Added `ARG`/`ENV` for Supabase environment variables at build time.
+- **Workflow Consolidation**: Merged `ci.yml` and `deploy.yml` into single `ci-cd.yml` pipeline.
+
+### Infrastructure
+- Installed Node.js v20.19.6, npm v10.8.2, and PM2 v6.0.14 on VPS.
+- Configured GitHub repository secrets for deployment automation.
+
 ## [0.2.0] - 2026-01-03
+
 
 ### Added
 - **Global Error Boundary**: Created `error.tsx` for graceful error handling.
