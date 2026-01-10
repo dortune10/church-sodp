@@ -67,40 +67,13 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Vision & Core Values */}
+          {/* Vision */}
           <div className="border-t border-border pt-12">
-
-            <div className="grid gap-12">
-              {/* Vision */}
-              <div>
-                <h3 className="text-2xl font-bold text-primary mb-4">Our Vision</h3>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  To raise disciples to build God&apos;s Kingdom, within the communities and the world at large by discipling and empowering them to maximize and perfect their God given potentials to fulfill their heavenly mandate.
-                </p>
-              </div>
-
-              {/* Core Values */}
-              <div>
-                <h3 className="text-2xl font-bold text-primary mb-6">Our Core Value</h3>
-                <ul className="space-y-4 text-lg">
-                  <li className="flex items-start gap-4">
-                    <span className="text-secondary font-bold text-2xl">S</span>
-                    <span className="text-muted-foreground">erving... <span className="italic">Mark 9:35</span></span>
-                  </li>
-                  <li className="flex items-start gap-4">
-                    <span className="text-secondary font-bold text-2xl">O</span>
-                    <span className="text-muted-foreground">thers in... <span className="italic">Galatians 6:2</span></span>
-                  </li>
-                  <li className="flex items-start gap-4">
-                    <span className="text-secondary font-bold text-2xl">D</span>
-                    <span className="text-muted-foreground">ominion and... <span className="italic">Judges 5:13</span></span>
-                  </li>
-                  <li className="flex items-start gap-4">
-                    <span className="text-secondary font-bold text-2xl">P</span>
-                    <span className="text-muted-foreground">erfection... <span className="italic">Psalms 138:8a</span></span>
-                  </li>
-                </ul>
-              </div>
+            <div>
+              <h3 className="text-2xl font-bold text-primary mb-4">Our Vision</h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                To raise disciples to build God&apos;s Kingdom, within the communities and the world at large by discipling and empowering them to maximize and perfect their God given potentials to fulfill their heavenly mandate.
+              </p>
             </div>
 
             <div className="text-center mt-12">
@@ -151,7 +124,7 @@ export default async function Home() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">Location</h3>
+                  <h3 className="text-xl font-semibold">Address</h3>
                   <p className="text-muted-foreground">
                     1520 Commercial Park Dr<br />
                     Lakeland, FL 33801

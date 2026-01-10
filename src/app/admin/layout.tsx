@@ -18,6 +18,8 @@ export default async function AdminLayout({
         { name: "Sermons", href: "/admin/sermons" },
         { name: "Blog", href: "/admin/blog" },
         { name: "Gallery", href: "/admin/gallery" },
+        { name: "Messages", href: "/admin/messages" },
+        { name: "Prayer Requests", href: "/admin/prayer-requests" },
         { name: "Users", href: "/admin/users" },
         { name: "Settings", href: "/admin/settings" },
     ];
