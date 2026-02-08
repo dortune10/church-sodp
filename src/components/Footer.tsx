@@ -35,7 +35,7 @@ export default async function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/ministries" className="text-muted-foreground hover:text-primary">
+                                <Link href="/about#ministries" className="text-muted-foreground hover:text-primary">
                                     Ministries
                                 </Link>
                             </li>

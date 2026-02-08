@@ -45,12 +45,12 @@ export default async function Home() {
             <div className="text-lg text-muted-foreground leading-relaxed">
               {/* Image floated left with text wrapping */}
               <img
-                src="/uploads/pastors.jpg"
+                src="/uploads/ourpastors.jpg"
                 alt="Pastors of RCCG SODP"
-                className="float-left mr-8 mb-4 rounded-lg shadow-lg w-64 md:w-80"
+                className="float-none sm:float-left mr-0 sm:mr-8 mb-4 rounded-lg shadow-lg w-40 sm:w-64 md:w-80"
               />
               <p className="mb-6">
-                We welcome you to Sanctuary of Double Perfection. RCCG, Sanctuary of Double Perfection is one of the over 800 parishes of The Redeemed Christian Church of God in North America and is under Florida Zone 4 with the headquarters in Tampa, Florida. The church started in Lakeland in January 2012.
+                We welcome you to Sanctuary of Double Perfection. RCCG, Sanctuary of Double Perfection(SODP) Lakeland, Florida is one of the Parishes of the Redeemed Christian Church of God (RCCG), The Americas 1 Dallas, Texas. SODP is the Zonal HQ of Florida Zone 5 under Florida Province 5, Brandon, under Region 4 (Dominion Region) Raleigh, North Carolina. The church started in Lakeland in January 2012.
               </p>
               <p className="mb-6">
                 SODP is a church where we believe in the undiluted word of God, holiness, evangelism and the power of prayer.
@@ -99,58 +99,89 @@ export default async function Home() {
                   <h3 className="text-xl font-semibold mb-4">Weekly Services</h3>
                   <ul className="space-y-3 text-muted-foreground">
                     <li className="flex justify-between border-b border-border/50 pb-2">
-                      <span><strong>Sunday</strong> - School & Worship</span>
-                      <span>10:00 AM & 11:00 AM</span>
+                      <span><strong>Sunday</strong> - (Online/Onsite)</span>
+                      <span>10:00 AM</span>
                     </li>
                     <li className="flex justify-between border-b border-border/50 pb-2">
                       <span><strong>Tuesday</strong> - Liberation Hour</span>
                       <span>10:00 AM</span>
                     </li>
                     <li className="flex justify-between border-b border-border/50 pb-2">
-                      <span><strong>Wednesday</strong> - Bible Study</span>
-                      <span>7:00 - 8:30 PM</span>
+                      <span><strong>Wednesday</strong> - Online Bible Study</span>
+                      <span>7:00 PM</span>
                     </li>
                     <li className="flex justify-between border-b border-border/50 pb-2">
-                      <span><strong>Thursday</strong> - Liberation Hour (Teleconference)</span>
-                      <span>8:00 - 9:00 PM</span>
+                      <span><strong>Thursday</strong> - Liberation Hour</span>
+                      <span>8:00 PM</span>
                     </li>
                     <li className="flex justify-between border-b border-border/50 pb-2">
-                      <span><strong>Friday</strong> - Prayer Meeting</span>
-                      <span>7:00 - 8:30 PM</span>
+                      <span><strong>Friday</strong> - Online Prayer Meeting</span>
+                      <span>7:00 PM</span>
                     </li>
                   </ul>
                   <p className="text-sm text-muted-foreground mt-3 italic">
                     Prayer Line: 515-606-5197, Access Code: 970438#
                   </p>
+
+                  <div className="mt-6">
+                    <h3 className="text-xl font-semibold mb-4">Monthly Services</h3>
+                    <ul className="space-y-2 text-muted-foreground">
+                      <li className="flex justify-between">
+                        <span><strong>1st Sunday</strong> - Thanksgiving (Online/Onsite)</span>
+                        <span>10:00 AM</span>
+                      </li>
+                      <li className="flex justify-between">
+                        <span><strong>3rd Sunday</strong> - Youth Sunday (Online/Onsite)</span>
+                        <span>10:00 AM</span>
+                      </li>
+                      <li className="flex justify-between">
+                        <span><strong>Last Friday</strong> - Vigil / Communion (Online/Onsite)</span>
+                        <span>10:00 PM</span>
+                      </li>
+                      <li className="flex justify-between">
+                        <span><strong>Last Sunday</strong> - Anointing (Online/Onsite)</span>
+                        <span>10:00 AM</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="text-xl font-semibold mb-2">Church Office Hours</h3>
+                    <p className="text-muted-foreground">Tuesday – Friday 10:00 AM – 4:00 PM</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold">Address</h3>
-                  <p className="text-muted-foreground">
-                    1520 Commercial Park Dr<br />
-                    Lakeland, FL 33801
-                  </p>
-                </div>
+                {/* Address and Get Directions moved above the map */}
+              </div>
+            </div>
+            <div>
+              <div className="mb-4 p-4 border border-border rounded-lg bg-background">
+                <h3 className="text-xl font-semibold">Address</h3>
+                <p className="text-muted-foreground">
+                  1520 Commercial Park Dr<br />
+                  Lakeland, FL 33801
+                </p>
                 <a
-                  href="https://www.google.com/maps/place/The+Redeemed+Christian+Church+of+God+Sanctuary+of+Double+Perfection/@28.0248497,-81.9272728,17z"
+                  href="https://maps.app.goo.gl/MQExk9wPzQugL8Qo9"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block text-secondary font-bold hover:underline"
+                  className="inline-block text-secondary font-bold hover:underline mt-3"
                 >
                   Get Directions &rarr;
                 </a>
               </div>
-            </div>
-            <div className="aspect-video rounded-lg overflow-hidden border border-border">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3516.8!2d-81.9547!3d28.0394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd3f0e9a8b0001%3A0x0!2s1520%20Commercial%20Park%20Dr%2C%20Lakeland%2C%20FL%2033801!5e0!3m2!1sen!2sus!4v1704340000000!5m2!1sen!2sus"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="RCCG SODP Location"
-              ></iframe>
+
+              <div className="aspect-video rounded-lg overflow-hidden border border-border">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3516.8!2d-81.9547!3d28.0394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd3f0e9a8b0001%3A0x0!2s1520%20Commercial%20Park%20Dr%2C%20Lakeland%2C%20FL%2033801!5e0!3m2!1sen!2sus!4v1704340000000!5m2!1sen!2sus"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="RCCG SODP Location"
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -162,7 +193,7 @@ export default async function Home() {
           <h2 className="text-3xl font-bold text-primary mb-12">Learn More</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { title: "Ministries", href: "/ministries", desc: "Find your place to belong and serve." },
+              { title: "Ministries", href: "/about#ministries", desc: "Find your place to belong and serve." },
               { title: "Connect", href: "/contact", desc: "New here? We'd love to meet you." },
               { title: "Sermons", href: "/sermons", desc: "Listen to recent teachings and series." },
               { title: "About Us", href: "/about", desc: "Our mission, beliefs, and leadership." },

@@ -27,7 +27,7 @@ export default async function MinistryDetailPage({
             <section className="bg-primary py-20 text-primary-foreground">
                 <div className="container mx-auto px-4">
                     <Link
-                        href="/ministries"
+                        href="/about#ministries"
                         className="text-sm font-medium opacity-80 hover:opacity-100 mb-6 inline-block"
                     >
                         &larr; All Ministries

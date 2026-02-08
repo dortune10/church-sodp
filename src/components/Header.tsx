@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
+import MobileMenu from "./MobileMenu";
 import { createServerComponentClient } from "@/lib/supabase/server";
 
 export default async function Header() {
@@ -8,12 +9,11 @@ export default async function Header() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Ministries", href: "/ministries" },
+    { name: "About", href: "/about", children: [ { name: "Ministries", href: "/about#ministries" } ] },
     { name: "Sermons", href: "/sermons" },
     { name: "Events", href: "/events" },
-    { name: "Blog", href: "/blog" },
-    { name: "Gallery", href: "/gallery" },
+    { name: "Give", href: "/give" },
+    { name: "Media", href: "/media", children: [ { name: "Blog", href: "/blog" }, { name: "Gallery", href: "/gallery" } ] },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -30,17 +30,52 @@ export default async function Header() {
         </div>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              {link.name}
-            </Link>
+            link.children ? (
+              <div
+                key={link.name}
+                className="relative group"
+                tabIndex={0}
+                aria-haspopup="true"
+              >
+                <Link
+                  href={link.href}
+                  className="text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2"
+                >
+                  {link.name}
+                </Link>
+
+                {/* Dropdown: visible on hover or focus-within, uses smooth scale/opacity transition */}
+                <div className="absolute left-0 mt-2 w-56 opacity-0 scale-95 transform transition-all duration-200 origin-top-left pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:scale-100 z-50">
+                  <div className="bg-background border border-border rounded-md shadow-md overflow-hidden">
+                    <div role="menu" aria-label={`${link.name} submenu`} className="py-1">
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.name}
+                          href={child.href}
+                          role="menuitem"
+                          className="block px-4 py-2 text-sm text-muted-foreground hover:bg-muted transition-colors"
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                {link.name}
+              </Link>
+            )
           ))}
         </nav>
         <div className="flex items-center gap-4">
           <ThemeToggle />
+          <MobileMenu />
           {user ? (
             <div className="flex items-center gap-4">
               <span className="hidden lg:block text-sm text-muted-foreground truncate max-w-[150px]">

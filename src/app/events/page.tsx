@@ -11,6 +11,51 @@ export default async function EventsPage() {
         .gte("start_at", new Date().toISOString())
         .order("start_at", { ascending: true });
 
+    // Generate weekly schedule for 2025 (weeks starting on Sunday)
+    function generateWeeklySchedule(year: number) {
+        const weeks: Array<{ weekStart: Date; days: Record<string, Date | null> }> = [];
+        const start = new Date(year, 0, 1);
+        const end = new Date(year, 11, 31);
+
+        // find first Sunday on or after Jan 1
+        const firstSunday = new Date(start);
+        const day = firstSunday.getDay();
+        if (day !== 0) {
+            firstSunday.setDate(firstSunday.getDate() + (7 - day));
+        }
+
+        for (let d = new Date(firstSunday); d <= end; d.setDate(d.getDate() + 7)) {
+            const sunday = new Date(d);
+            const days: Record<string, Date | null> = {
+                Sunday: new Date(sunday),
+                Tuesday: null,
+                Wednesday: null,
+                Thursday: null,
+                Friday: null,
+            };
+
+            const tuesday = new Date(sunday);
+            tuesday.setDate(tuesday.getDate() + 2);
+            const wednesday = new Date(sunday);
+            wednesday.setDate(wednesday.getDate() + 3);
+            const thursday = new Date(sunday);
+            thursday.setDate(thursday.getDate() + 4);
+            const friday = new Date(sunday);
+            friday.setDate(friday.getDate() + 5);
+
+            if (tuesday.getFullYear() === year) days.Tuesday = tuesday;
+            if (wednesday.getFullYear() === year) days.Wednesday = wednesday;
+            if (thursday.getFullYear() === year) days.Thursday = thursday;
+            if (friday.getFullYear() === year) days.Friday = friday;
+
+            weeks.push({ weekStart: new Date(sunday), days });
+        }
+
+        return weeks;
+    }
+
+    const weekly2025 = generateWeeklySchedule(2025);
+
     return (
         <div className="flex flex-col">
             {/* Page Header */}
@@ -26,6 +71,33 @@ export default async function EventsPage() {
             {/* Events List */}
             <section className="py-20">
                 <div className="container mx-auto px-4 max-w-5xl">
+                    {/* Weekly 2025 Schedule */}
+                    <div className="mb-12">
+                        <h2 className="text-2xl font-bold text-primary mb-4">Weekly Schedule — 2025</h2>
+                        <p className="text-muted-foreground mb-6">Below are the weekly service dates for 2025. Use these as a reference for recurring weekly activities.</p>
+                        <div className="space-y-6">
+                            {weekly2025.map((w, idx) => (
+                                <div key={idx} className="p-4 border border-border rounded-lg bg-background">
+                                    <h3 className="font-semibold">Week of {w.weekStart.toLocaleDateString()}</h3>
+                                    <ul className="mt-2 text-muted-foreground space-y-1">
+                                        <li><strong>Sunday</strong> — {w.days.Sunday.toLocaleDateString()} — Sunday (Online/Onsite) 10:00 AM</li>
+                                        {w.days.Tuesday && (
+                                            <li><strong>Tuesday</strong> — {w.days.Tuesday.toLocaleDateString()} — Liberation Hour 10:00 AM</li>
+                                        )}
+                                        {w.days.Wednesday && (
+                                            <li><strong>Wednesday</strong> — {w.days.Wednesday.toLocaleDateString()} — Online Bible Study 7:00 PM</li>
+                                        )}
+                                        {w.days.Thursday && (
+                                            <li><strong>Thursday</strong> — {w.days.Thursday.toLocaleDateString()} — Liberation Hour 8:00 PM</li>
+                                        )}
+                                        {w.days.Friday && (
+                                            <li><strong>Friday</strong> — {w.days.Friday.toLocaleDateString()} — Online Prayer Meeting 7:00 PM</li>
+                                        )}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                     <div className="space-y-8">
                         {events && events.length > 0 ? (
                             events.map((event) => {
