@@ -80,7 +80,9 @@ export default async function EventsPage() {
                                 <div key={idx} className="p-4 border border-border rounded-lg bg-background">
                                     <h3 className="font-semibold">Week of {w.weekStart.toLocaleDateString()}</h3>
                                     <ul className="mt-2 text-muted-foreground space-y-1">
-                                        <li><strong>Sunday</strong> — {w.days.Sunday.toLocaleDateString()} — Sunday (Online/Onsite) 10:00 AM</li>
+                                        <li>
+                                            <strong>Sunday</strong> — {w.days.Sunday ? w.days.Sunday.toLocaleDateString() : w.weekStart.toLocaleDateString()} — Sunday (Online/Onsite) 10:00 AM
+                                        </li>
                                         {w.days.Tuesday && (
                                             <li><strong>Tuesday</strong> — {w.days.Tuesday.toLocaleDateString()} — Liberation Hour 10:00 AM</li>
                                         )}
