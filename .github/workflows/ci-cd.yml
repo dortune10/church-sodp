@@ -79,6 +79,12 @@ jobs:
             npm ci
             npm run build
             
-            # Start/restart with PM2
-            pm2 restart church-app || pm2 start npm --name church-app -- start -- -p 3330
+            # Stop existing PM2 process and kill any orphaned process on port 3330
+            pm2 stop church-app 2>/dev/null || true
+            pm2 delete church-app 2>/dev/null || true
+            fuser -k 3330/tcp 2>/dev/null || true
+            sleep 2
+            
+            # Start fresh with PM2
+            pm2 start npm --name church-app -- start
             pm2 save
