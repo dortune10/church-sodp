@@ -71,33 +71,15 @@ export default async function EventsPage() {
             {/* Events List */}
             <section className="py-20">
                 <div className="container mx-auto px-4 max-w-5xl">
-                    {/* Weekly 2025 Schedule */}
+                    {/* Calendar for current month */}
                     <div className="mb-12">
-                        <h2 className="text-2xl font-bold text-primary mb-4">Weekly Schedule — 2025</h2>
-                        <p className="text-muted-foreground mb-6">Below are the weekly service dates for 2025. Use these as a reference for recurring weekly activities.</p>
+                        <h2 className="text-2xl font-bold text-primary mb-4">Calendar — This Month</h2>
+                        <p className="text-muted-foreground mb-6">Select a day to view activities for the current month.</p>
                         <div className="space-y-6">
-                            {weekly2025.map((w, idx) => (
-                                <div key={idx} className="p-4 border border-border rounded-lg bg-background">
-                                    <h3 className="font-semibold">Week of {w.weekStart.toLocaleDateString()}</h3>
-                                    <ul className="mt-2 text-muted-foreground space-y-1">
-                                        <li>
-                                            <strong>Sunday</strong> — {w.days.Sunday ? w.days.Sunday.toLocaleDateString() : w.weekStart.toLocaleDateString()} — Sunday (Online/Onsite) 10:00 AM
-                                        </li>
-                                        {w.days.Tuesday && (
-                                            <li><strong>Tuesday</strong> — {w.days.Tuesday.toLocaleDateString()} — Liberation Hour 10:00 AM</li>
-                                        )}
-                                        {w.days.Wednesday && (
-                                            <li><strong>Wednesday</strong> — {w.days.Wednesday.toLocaleDateString()} — Online Bible Study 7:00 PM</li>
-                                        )}
-                                        {w.days.Thursday && (
-                                            <li><strong>Thursday</strong> — {w.days.Thursday.toLocaleDateString()} — Liberation Hour 8:00 PM</li>
-                                        )}
-                                        {w.days.Friday && (
-                                            <li><strong>Friday</strong> — {w.days.Friday.toLocaleDateString()} — Online Prayer Meeting 7:00 PM</li>
-                                        )}
-                                    </ul>
-                                </div>
-                            ))}
+                            {/* Client-side calendar component */}
+                            {/* eslint-disable-next-line @next/next/no-typed-html */}
+                            {/** EventsCalendar is a client component that receives serialized events **/}
+                            <EventsCalendar events={events ? JSON.parse(JSON.stringify(events)) : []} />
                         </div>
                     </div>
                     <div className="space-y-8">
