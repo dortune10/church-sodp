@@ -17,6 +17,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Ensure we fetch the full history and check out the PR branch
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
