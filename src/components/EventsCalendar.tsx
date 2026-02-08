@@ -25,12 +25,11 @@ function endOfMonth(date: Date) {
 }
 
 export default function EventsCalendar({ events }: Props) {
-  const today = new Date();
-  const monthStart = startOfMonth(today);
-  const monthEnd = endOfMonth(today);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
 
   const [selected, setSelected] = useState<Date | null>(null);
-  const [filterSelectedOnly, setFilterSelectedOnly] = useState(false);
 
   const eventsByDate = useMemo(() => {
     const map = new Map<string, EventItem[]>();
@@ -74,15 +73,48 @@ export default function EventsCalendar({ events }: Props) {
 
   const selectedKey = selected ? selected.toISOString().slice(0, 10) : null;
 
-  const displayedEvents = filterSelectedOnly && selectedKey
-    ? (eventsByDate.get(selectedKey) || [])
-    : monthEvents;
+  const weekEvents = useMemo(() => {
+    if (!selected) return [];
+    const list: EventItem[] = [];
+    const startOfWeek = new Date(selected);
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+    events.forEach((e) => {
+      if (!e.start_at) return;
+      const d = new Date(e.start_at);
+      if (d >= startOfWeek && d <= endOfWeek) list.push(e);
+    });
+    // sort by date
+    list.sort((a, b) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime());
+    return list;
+  }, [events, selected]);
+
+  // If a day is selected, show only that day's events; otherwise show all events for the month
+  const displayedEvents = selectedKey ? weekEvents : monthEvents;
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">{currentDate.toLocaleString([], { month: 'long', year: 'numeric' })}</h3>
+        <div className="flex items-center gap-2">
+            <button
+                onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)))}
+                className="p-2 rounded-lg border bg-background hover:bg-muted"
+            >
+                &lt;
+            </button>
+            <button
+                onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)))}
+                className="p-2 rounded-lg border bg-background hover:bg-muted"
+            >
+                &gt;
+            </button>
+        </div>
+      </div>
       <div>
-        <h3 className="text-lg font-semibold">{today.toLocaleString([], { month: 'long', year: 'numeric' })}</h3>
-        <p className="text-sm text-muted-foreground">Click a day to highlight it. Toggle to show only that day's activities.</p>
+        <p className="text-sm text-muted-foreground">Click a day to highlight it. Toggle to show only that day&apos;s activities.</p>
       </div>
 
       <div className="grid grid-cols-7 gap-2 text-center">
@@ -109,17 +141,18 @@ export default function EventsCalendar({ events }: Props) {
       </div>
 
       <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={filterSelectedOnly} onChange={(e) => setFilterSelectedOnly(e.target.checked)} />
-          Show only selected day
-        </label>
         {selected && (
           <div className="text-sm text-muted-foreground">Selected: {selected.toLocaleDateString()}</div>
+        )}
+        {selected && (
+          <button className="text-sm text-primary underline" onClick={() => setSelected(null)}>Show full month</button>
         )}
       </div>
 
       <div>
-        <h4 className="font-semibold">Activities {filterSelectedOnly && selected ? `for ${selected.toLocaleDateString()}` : `for ${today.toLocaleString([], { month: 'long', year: 'numeric' })}`}</h4>
+        <h4 className="font-semibold">
+          Activities {selected ? `for the week of ${selected.toLocaleDateString()}` : `for ${currentDate.toLocaleString([], { month: 'long', year: 'numeric' })}`}
+        </h4>
         <div className="mt-3 space-y-4">
           {displayedEvents.length === 0 ? (
             <p className="text-muted-foreground">No activities found.</p>

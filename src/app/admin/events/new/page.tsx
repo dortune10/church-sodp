@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function NewEventPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isRecurring, setIsRecurring] = useState(false);
     const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York");
     const router = useRouter();
     const supabase = createClient();
@@ -30,41 +31,77 @@ export default function NewEventPage() {
             // However, since we're in the browser, many libs or standard methods are available.
             // A simple reliable way:
             try {
-                const formatted = new Intl.DateTimeFormat('en-US', {
-                    timeZone: timezone,
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
-                }).format(date);
                 // Actually, the easiest way for Supabase (TIMESTAMPTZ) is just as follows:
                 return new Date(date.toLocaleString('en-US', { timeZone: timezone })).toISOString();
-            } catch (e) {
+            } catch {
                 return new Date(localStr).toISOString();
             }
         };
 
-        const { error } = await supabase.from("events").insert([
-            {
+        const getRecurringDates = (startDate: Date, frequency: string, endDate: Date) => {
+            const dates = [];
+            const currentDate = new Date(startDate);
+
+            while (currentDate <= endDate) {
+                dates.push(new Date(currentDate));
+                if (frequency === "daily") {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                } else if (frequency === "weekly") {
+                    currentDate.setDate(currentDate.getDate() + 7);
+                } else if (frequency === "monthly") {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                }
+            }
+
+            return dates;
+        };
+
+        if (isRecurring) {
+            const recurringDates = getRecurringDates(
+                new Date(data.startsAt as string),
+                data.frequency as string,
+                new Date(data.recurrenceEndDate as string)
+            );
+
+            const eventsToInsert = recurringDates.map((date) => ({
                 title: data.title,
                 description: data.description || null,
-                start_at: formatWithTimezone(data.startsAt as string),
-                end_at: formatWithTimezone(data.endsAt as string),
+                start_at: formatWithTimezone(date.toISOString()),
+                end_at: data.endsAt ? formatWithTimezone(new Date(data.endsAt as string).toISOString()) : null,
                 location: data.location || null,
                 registration_enabled: data.registrationEnabled === "on",
                 capacity: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
-            },
-        ]);
+            }));
 
-        if (error) {
-            setError(error.message);
-            setLoading(false);
+            const { error } = await supabase.from("events").insert(eventsToInsert);
+
+            if (error) {
+                setError(error.message);
+                setLoading(false);
+            } else {
+                router.push("/admin/events");
+                router.refresh();
+            }
         } else {
-            router.push("/admin/events");
-            router.refresh();
+            const { error } = await supabase.from("events").insert([
+                {
+                    title: data.title,
+                    description: data.description || null,
+                    start_at: formatWithTimezone(data.startsAt as string),
+                    end_at: formatWithTimezone(data.endsAt as string),
+                    location: data.location || null,
+                    registration_enabled: data.registrationEnabled === "on",
+                    capacity: data.maxRegistrations ? parseInt(data.maxRegistrations as string) : null,
+                },
+            ]);
+
+            if (error) {
+                setError(error.message);
+                setLoading(false);
+            } else {
+                router.push("/admin/events");
+                router.refresh();
+            }
         }
     };
 
@@ -149,35 +186,6 @@ export default function NewEventPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">
-                                Location
-                            </label>
-                            <input
-                                name="location"
-                                type="text"
-                                placeholder="e.g. Main Sanctuary, Online"
-                                className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">
-                                Category
-                            </label>
-                            <select
-                                name="category"
-                                className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                            >
-                                <option value="General">General</option>
-                                <option value="Worship">Worship</option>
-                                <option value="Outreach">Outreach</option>
-                                <option value="Youth">Youth</option>
-                                <option value="Training">Training</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div>
                         <label className="block text-sm font-medium text-foreground mb-1">
                             Description
@@ -187,6 +195,49 @@ export default function NewEventPage() {
                             rows={4}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                         ></textarea>
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t border-border">
+                        <div className="flex items-center gap-3">
+                            <input
+                                id="isRecurring"
+                                name="isRecurring"
+                                type="checkbox"
+                                checked={isRecurring}
+                                onChange={(e) => setIsRecurring(e.target.checked)}
+                                className="rounded border-border text-primary focus:ring-primary"
+                            />
+                            <label htmlFor="isRecurring" className="text-sm font-medium text-foreground">
+                                This is a recurring event
+                            </label>
+                        </div>
+                        {isRecurring && (
+                            <div id="recurring-options" className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-foreground mb-1">
+                                        Frequency
+                                    </label>
+                                    <select
+                                        name="frequency"
+                                        className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
+                                    >
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-foreground mb-1">
+                                        Recurrence End Date
+                                    </label>
+                                    <input
+                                        name="recurrenceEndDate"
+                                        type="date"
+                                        className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-border">
