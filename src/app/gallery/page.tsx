@@ -1,5 +1,6 @@
 import { createServerComponentClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata = {
     title: 'Gallery | Our Church',
@@ -44,9 +45,10 @@ export default async function GalleryPage() {
                         >
                             <div className="aspect-w-16 aspect-h-9 relative overflow-hidden h-64">
                                 {album.photos?.[0] ? (
-                                    <img
+                                    <Image
                                         src={album.photos[0].storage_path}
                                         alt={album.title}
+                                        fill
                                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                                     />
                                 ) : (

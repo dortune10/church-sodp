@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createServerComponentClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 
@@ -55,7 +56,7 @@ export default async function UserDetailPage({
             <div className="bg-background border border-border rounded-lg p-6 shadow-sm">
                 <div className="flex items-center gap-6 mb-8 pb-8 border-b border-border">
                     {user.avatar_url ? (
-                        <img src={user.avatar_url} alt="" className="h-20 w-20 rounded-full border-2 border-primary/20" />
+                        <Image src={user.avatar_url} alt="" width={80} height={80} className="h-20 w-20 rounded-full border-2 border-primary/20" />
                     ) : (
                         <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">
                             {user.full_name?.charAt(0) || user.email.charAt(0).toUpperCase()}
@@ -78,8 +79,8 @@ export default async function UserDetailPage({
                                 <label
                                     key={role}
                                     className={`relative flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${user.role === role
-                                            ? "border-primary bg-primary/5 ring-1 ring-primary"
-                                            : "border-border hover:border-muted-foreground/30"
+                                        ? "border-primary bg-primary/5 ring-1 ring-primary"
+                                        : "border-border hover:border-muted-foreground/30"
                                         }`}
                                 >
                                     <input

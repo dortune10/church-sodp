@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createServerComponentClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -53,7 +54,7 @@ export default async function AdminUsersPage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                                         <div className="flex items-center gap-3">
                                             {user.avatar_url ? (
-                                                <img src={user.avatar_url} alt="" className="h-8 w-8 rounded-full" />
+                                                <Image src={user.avatar_url} alt="" width={32} height={32} className="h-8 w-8 rounded-full" />
                                             ) : (
                                                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                                                     {user.full_name?.charAt(0) || user.email.charAt(0).toUpperCase()}

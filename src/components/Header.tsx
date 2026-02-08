@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import MobileMenu from "./MobileMenu";
 import { createServerComponentClient } from "@/lib/supabase/server";
@@ -9,11 +10,11 @@ export default async function Header() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about", children: [ { name: "Ministries", href: "/about#ministries" } ] },
+    { name: "About", href: "/about", children: [{ name: "Ministries", href: "/about#ministries" }] },
     { name: "Sermons", href: "/sermons" },
     { name: "Events", href: "/events" },
     { name: "Give", href: "/give" },
-    { name: "Media", href: "/media", children: [ { name: "Blog", href: "/blog" }, { name: "Gallery", href: "/gallery" } ] },
+    { name: "Media", href: "/media", children: [{ name: "Blog", href: "/blog" }, { name: "Gallery", href: "/gallery" }] },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -22,7 +23,7 @@ export default async function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="RCCG Logo" className="h-10 w-10 rounded-full object-contain bg-white p-0.5 shadow-sm" />
+            <Image src="/logo.jpg" alt="RCCG Logo" width={40} height={40} className="h-10 w-10 rounded-full object-contain bg-white p-0.5 shadow-sm" />
             <span className="hidden sm:block text-xl font-bold text-primary">
               RCCG SODP
             </span>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createServerComponentClient } from "@/lib/supabase/server";
 
 export default async function AdminLayout({
@@ -29,7 +30,7 @@ export default async function AdminLayout({
             {/* Sidebar */}
             <aside className="w-64 border-r border-border bg-muted/30 flex flex-col">
                 <div className="p-6 border-b border-border flex flex-col items-center gap-2">
-                    <img src="/logo.jpg" alt="RCCG Logo" className="h-16 w-16 rounded-full object-contain bg-white p-1 shadow-sm" />
+                    <Image src="/logo.jpg" alt="RCCG Logo" width={64} height={64} className="h-16 w-16 rounded-full object-contain bg-white p-1 shadow-sm" />
                     <span className="font-bold text-primary text-center leading-tight">
                         RCCG SODP Admin
                     </span>

@@ -1,5 +1,6 @@
 import { createServerComponentClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -60,9 +61,10 @@ export default async function BlogPostDetailPage({
             {post.thumbnail_url && (
                 <section className="container mx-auto px-4 max-w-5xl mb-16">
                     <div className="aspect-[21/9] rounded-[40px] overflow-hidden shadow-2xl border border-border">
-                        <img
+                        <Image
                             src={post.thumbnail_url}
                             alt={post.title}
+                            fill
                             className="w-full h-full object-cover"
                         />
                     </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -36,10 +37,12 @@ export default function LoginPage() {
         <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <Link href="/">
-                    <img
+                    <Image
                         className="mx-auto h-24 w-auto rounded-full object-contain bg-white p-1 shadow-md"
                         src="/logo.jpg"
                         alt="RCCG Logo"
+                        width={96}
+                        height={96}
                     />
                 </Link>
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-primary">

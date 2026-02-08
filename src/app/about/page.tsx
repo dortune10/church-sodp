@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createServerComponentClient } from "@/lib/supabase/server";
 
 export default async function AboutPage() {
@@ -8,7 +9,7 @@ export default async function AboutPage() {
     const pageContent = {
         mission: "Our mission is to lead people into a growing relationship with Jesus Christ. We seek to be a lighthouse in our community, sharing hope and love with everyone we meet.",
         story: "Founded in 2012, Sanctuary of Double Perfection began with a small group of faithful believers dedicated to making a difference. Today, we continue that legacy by fostering a welcoming environment for all to worship and grow.",
-            motto: "Achieving God’s purpose in life through prayer and evangelism.",
+        motto: "Achieving God’s purpose in life through prayer and evangelism.",
         beliefs: [
             { point: "We believe in the authority and inspiration of Scripture." },
             { point: "We believe in one God, existing in three persons: Father, Son, and Holy Spirit." },
@@ -218,12 +219,12 @@ export default async function AboutPage() {
                                 </tbody>
                             </table>
                         </div>
-                    
-                    {/* Church Office Hours */}
-                    <div className="mt-8">
-                        <h3 className="text-2xl font-bold text-primary mb-4">Church Office Hours</h3>
-                        <p className="text-lg text-muted-foreground">Tuesday – Friday 10:00 AM – 4:00 PM</p>
-                    </div>
+
+                        {/* Church Office Hours */}
+                        <div className="mt-8">
+                            <h3 className="text-2xl font-bold text-primary mb-4">Church Office Hours</h3>
+                            <p className="text-lg text-muted-foreground">Tuesday – Friday 10:00 AM – 4:00 PM</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -238,7 +239,7 @@ export default async function AboutPage() {
                                 <div key={leader.id} className="p-8 border border-border rounded-xl bg-background">
                                     <div className="w-32 h-32 bg-muted rounded-full mx-auto mb-6 flex items-center justify-center">
                                         {leader.avatar_url ? (
-                                            <img src={leader.avatar_url} alt={leader.full_name || ""} className="w-full h-full rounded-full object-cover" />
+                                            <Image src={leader.avatar_url} alt={leader.full_name || ""} width={128} height={128} className="w-full h-full rounded-full object-cover" />
                                         ) : (
                                             <span className="text-muted-foreground">Photo</span>
                                         )}

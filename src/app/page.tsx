@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { createServerComponentClient } from "@/lib/supabase/server";
+import Image from "next/image";
 
 export default async function Home() {
-  const supabase = await createServerComponentClient();
-  const { data: settings } = await supabase.from("settings").select("*");
-
-  const settingsMap = new Map(settings?.map(s => [s.key, s.value]));
+  // Settings can be fetched and used here if needed
+  // const supabase = await createServerComponentClient();
+  // const { data: settings } = await supabase.from("settings").select("*");
 
   return (
     <div className="flex flex-col">
@@ -44,9 +43,11 @@ export default async function Home() {
             </h2>
             <div className="text-lg text-muted-foreground leading-relaxed">
               {/* Image floated left with text wrapping */}
-              <img
+              <Image
                 src="/uploads/ourpastors.jpg"
                 alt="Pastors of RCCG SODP"
+                width={320}
+                height={240}
                 className="float-none sm:float-left mr-0 sm:mr-8 mb-4 rounded-lg shadow-lg w-40 sm:w-64 md:w-80"
               />
               <p className="mb-6">
