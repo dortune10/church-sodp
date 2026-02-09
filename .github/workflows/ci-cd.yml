@@ -102,6 +102,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          envs: DOCKER_USERNAME,DOCKER_PASSWORD
           script: |
             cd /home/dotman/church-app
             
@@ -110,9 +111,14 @@ jobs:
             pm2 delete church-app 2>/dev/null || true
             fuser -k 3330/tcp 2>/dev/null || true
             
-            # Deploy with Docker
-            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            # Login to Docker Hub
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            
+            # Deploy with Docker (using docker compose v2)
             docker pull ${DOCKER_USERNAME}/church-app:latest
-            docker-compose down || true
-            docker-compose up -d
+            docker compose down || true
+            docker compose up -d
             docker image prune -f
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
