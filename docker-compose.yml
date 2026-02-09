@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  church-app:
+    image: ${DOCKER_USERNAME:-dortune10}/church-app:latest
+    container_name: church-app
+    restart: always
+    ports:
+      - "3330:3330"
+    environment:
+      - NODE_ENV=production
