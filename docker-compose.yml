@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  church-app:
+  app:
     image: ${DOCKER_USERNAME:-dortune10}/church-app:latest
     container_name: church-app
     restart: always

@@ -109,6 +109,12 @@ jobs:
             # Stop PM2 if running (migration from PM2 to Docker)
             pm2 stop church-app 2>/dev/null || true
             pm2 delete church-app 2>/dev/null || true
+            
+            # Force stop and remove all existing containers using port 3330
+            docker stop church-app 2>/dev/null || true
+            docker rm church-app 2>/dev/null || true
+            docker stop church-app-app-1 2>/dev/null || true
+            docker rm church-app-app-1 2>/dev/null || true
             fuser -k 3330/tcp 2>/dev/null || true
             
             # Login to Docker Hub
@@ -116,7 +122,7 @@ jobs:
             
             # Deploy with Docker (using docker compose v2)
             docker pull ${DOCKER_USERNAME}/church-app:latest
-            docker compose down || true
+            docker compose down --remove-orphans || true
             docker compose up -d
             docker image prune -f
         env:
