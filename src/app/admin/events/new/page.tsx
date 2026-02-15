@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonVariants } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Label } from "@/components/ui/Label";
@@ -246,12 +246,12 @@ export default function NewEventPage() {
                         </div>
 
                         <div className="flex justify-end gap-4 pt-4">
-                            <Button
-                                variant="ghost"
-                                asChild
+                            <Link
+                                href="/admin/events"
+                                className={buttonVariants({ variant: "ghost" })}
                             >
-                                <Link href="/admin/events">Cancel</Link>
-                            </Button>
+                                Cancel
+                            </Link>
                             <Button
                                 type="submit"
                                 disabled={loading}
