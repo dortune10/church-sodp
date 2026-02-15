@@ -86,7 +86,7 @@ export default async function Footer() {
                     </div>
                 </div>
                 <div className="mt-12 border-t border-border pt-8 text-center text-muted-foreground">
-                    <p>&copy; {new Date().getFullYear()} RCCG SODP. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} <span className="font-bold">RCCG SODP</span>. All rights reserved. | Designed by <a href="https://www.entracto.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary font-bold underline">Entracto</a> for RCCG SODP</p>
                 </div>
             </div>
         </footer>
