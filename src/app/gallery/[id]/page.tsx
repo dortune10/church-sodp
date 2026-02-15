@@ -1,7 +1,6 @@
 import { createServerComponentClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { Photo } from '@/types/database';
+
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
 

@@ -8,18 +8,12 @@ export default async function AdminPage() {
         .from("members")
         .select("*", { count: "exact", head: true });
 
-    const { count: ministryCount } = await supabase
-        .from("ministries")
-        .select("*", { count: "exact", head: true });
+
 
     const { count: eventCount } = await supabase
         .from("events")
         .select("*", { count: "exact", head: true })
         .gte("start_at", new Date().toISOString());
-
-    const { count: sermonCount } = await supabase
-        .from("sermons")
-        .select("*", { count: "exact", head: true });
 
     const { count: messageCount } = await supabase
         .from("contact_messages")

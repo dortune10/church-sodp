@@ -1,5 +1,5 @@
 import { createServerComponentClient } from "@/lib/supabase/server";
-import Link from "next/link";
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";

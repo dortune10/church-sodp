@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mic2, BookOpen, Camera, Radio } from "lucide-react";
+import { Mic2, BookOpen, Camera } from "lucide-react";
 
 export const metadata = {
   title: "Media & Resources | Our Church",

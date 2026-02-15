@@ -1,5 +1,4 @@
-import Link from "next/link";
-import Image from "next/image";
+
 import { createServerComponentClient } from "@/lib/supabase/server";
 import AdminSidebar from "@/components/AdminSidebar";
 
