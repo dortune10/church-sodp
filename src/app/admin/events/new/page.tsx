@@ -4,6 +4,13 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Label } from "@/components/ui/Label";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { Select } from "@/components/ui/Select";
 
 export default function NewEventPage() {
     const [loading, setLoading] = useState(false);
@@ -24,14 +31,8 @@ export default function NewEventPage() {
         // Helper to convert local time + timezone to ISO string
         const formatWithTimezone = (localStr: string | null) => {
             if (!localStr) return null;
-            // Create a date object from the YYYY-MM-DDTHH:mm string
             const date = new Date(localStr);
-            // We use the selected timezone to calculate the correct UTC time
-            // For a robust implementation, we format the local string as an ISO string with the selected offset
-            // However, since we're in the browser, many libs or standard methods are available.
-            // A simple reliable way:
             try {
-                // Actually, the easiest way for Supabase (TIMESTAMPTZ) is just as follows:
                 return new Date(date.toLocaleString('en-US', { timeZone: timezone })).toISOString();
             } catch {
                 return new Date(localStr).toISOString();
@@ -117,171 +118,150 @@ export default function NewEventPage() {
                 <h1 className="text-3xl font-bold text-primary">Create New Event</h1>
             </div>
 
-            <div className="bg-background border border-border rounded-lg p-6 shadow-sm">
-                {error && (
-                    <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-md text-sm">
-                        {error}
-                    </div>
-                )}
+            <Card>
+                <CardContent className="p-6">
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-md text-sm">
+                            {error}
+                        </div>
+                    )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-foreground mb-1">
-                            Event Title *
-                        </label>
-                        <input
-                            name="title"
-                            type="text"
-                            required
-                            className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-foreground mb-1">
-                            Event Timezone (Church Local Time)
-                        </label>
-                        <select
-                            value={timezone}
-                            onChange={(e) => setTimezone(e.target.value)}
-                            className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                        >
-                            <option value="America/New_York">Eastern Time (ET)</option>
-                            <option value="America/Chicago">Central Time (CT)</option>
-                            <option value="America/Denver">Mountain Time (MT)</option>
-                            <option value="America/Phoenix">Mountain Time - no DST (AZ)</option>
-                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                            <option value="America/Anchorage">Alaska Time</option>
-                            <option value="America/Adak">Hawaii-Aleutian Time</option>
-                            <option value="Pacific/Honolulu">Hawaii Time</option>
-                            <option value="Europe/London">London / GMT / BST</option>
-                            <option value="Africa/Lagos">Lagos / WAT</option>
-                        </select>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                            Entering a time below will be interpreted as being in this timezone.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">
-                                Start Date & Time *
-                            </label>
-                            <input
-                                name="startsAt"
-                                type="datetime-local"
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="title">Event Title *</Label>
+                            <Input
+                                id="title"
+                                name="title"
+                                type="text"
                                 required
-                                className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">
-                                End Date & Time
-                            </label>
-                            <input
-                                name="endsAt"
-                                type="datetime-local"
-                                className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                            />
-                        </div>
-                    </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-foreground mb-1">
-                            Description
-                        </label>
-                        <textarea
-                            name="description"
-                            rows={4}
-                            className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                        ></textarea>
-                    </div>
-
-                    <div className="space-y-4 pt-4 border-t border-border">
-                        <div className="flex items-center gap-3">
-                            <input
-                                id="isRecurring"
-                                name="isRecurring"
-                                type="checkbox"
-                                checked={isRecurring}
-                                onChange={(e) => setIsRecurring(e.target.checked)}
-                                className="rounded border-border text-primary focus:ring-primary"
-                            />
-                            <label htmlFor="isRecurring" className="text-sm font-medium text-foreground">
-                                This is a recurring event
-                            </label>
+                        <div className="space-y-2">
+                            <Label htmlFor="timezone">Event Timezone (Church Local Time)</Label>
+                            <Select
+                                id="timezone"
+                                value={timezone}
+                                onChange={(e) => setTimezone(e.target.value)}
+                            >
+                                <option value="America/New_York">Eastern Time (ET)</option>
+                                <option value="America/Chicago">Central Time (CT)</option>
+                                <option value="America/Denver">Mountain Time (MT)</option>
+                                <option value="America/Phoenix">Mountain Time - no DST (AZ)</option>
+                                <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                <option value="America/Anchorage">Alaska Time</option>
+                                <option value="America/Adak">Hawaii-Aleutian Time</option>
+                                <option value="Pacific/Honolulu">Hawaii Time</option>
+                                <option value="Europe/London">London / GMT / BST</option>
+                                <option value="Africa/Lagos">Lagos / WAT</option>
+                            </Select>
+                            <p className="text-xs text-muted-foreground">
+                                Entering a time below will be interpreted as being in this timezone.
+                            </p>
                         </div>
-                        {isRecurring && (
-                            <div id="recurring-options" className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-foreground mb-1">
-                                        Frequency
-                                    </label>
-                                    <select
-                                        name="frequency"
-                                        className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                                    >
-                                        <option value="daily">Daily</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="monthly">Monthly</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-foreground mb-1">
-                                        Recurrence End Date
-                                    </label>
-                                    <input
-                                        name="recurrenceEndDate"
-                                        type="date"
-                                        className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
-                                    />
-                                </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="startsAt">Start Date & Time *</Label>
+                                <Input
+                                    id="startsAt"
+                                    name="startsAt"
+                                    type="datetime-local"
+                                    required
+                                />
                             </div>
-                        )}
-                    </div>
-
-                    <div className="space-y-4 pt-4 border-t border-border">
-                        <div className="flex items-center gap-3">
-                            <input
-                                id="registrationEnabled"
-                                name="registrationEnabled"
-                                type="checkbox"
-                                className="rounded border-border text-primary focus:ring-primary"
-                            />
-                            <label htmlFor="registrationEnabled" className="text-sm font-medium text-foreground">
-                                Registration Enabled
-                            </label>
+                            <div className="space-y-2">
+                                <Label htmlFor="endsAt">End Date & Time</Label>
+                                <Input
+                                    id="endsAt"
+                                    name="endsAt"
+                                    type="datetime-local"
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">
-                                Max Registrations (Optional)
-                            </label>
-                            <input
-                                name="maxRegistrations"
-                                type="number"
-                                placeholder="No limit"
-                                className="w-32 rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary"
+
+                        <div className="space-y-2">
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea
+                                id="description"
+                                name="description"
+                                rows={4}
                             />
                         </div>
-                    </div>
 
-                    <div className="flex justify-end gap-4 pt-4">
-                        <Link
-                            href="/admin/events"
-                            className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            Cancel
-                        </Link>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="rounded-md bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 disabled:opacity-50 transition-colors"
-                        >
-                            {loading ? "Creating..." : "Create Event"}
-                        </button>
-                    </div>
-                </form>
-            </div>
+                        <div className="space-y-4 pt-4 border-t border-border">
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    id="isRecurring"
+                                    name="isRecurring"
+                                    checked={isRecurring}
+                                    onChange={(e) => setIsRecurring(e.target.checked)}
+                                />
+                                <Label htmlFor="isRecurring" className="font-medium">
+                                    This is a recurring event
+                                </Label>
+                            </div>
+                            {isRecurring && (
+                                <div id="recurring-options" className="space-y-4 pl-7">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="frequency">Frequency</Label>
+                                        <Select name="frequency" id="frequency">
+                                            <option value="daily">Daily</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="monthly">Monthly</option>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="recurrenceEndDate">Recurrence End Date</Label>
+                                        <Input
+                                            id="recurrenceEndDate"
+                                            name="recurrenceEndDate"
+                                            type="date"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-4 pt-4 border-t border-border">
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    id="registrationEnabled"
+                                    name="registrationEnabled"
+                                />
+                                <Label htmlFor="registrationEnabled" className="font-medium">
+                                    Registration Enabled
+                                </Label>
+                            </div>
+                            <div className="pl-7">
+                                <Label htmlFor="maxRegistrations" className="mb-2 block">Max Registrations (Optional)</Label>
+                                <Input
+                                    id="maxRegistrations"
+                                    name="maxRegistrations"
+                                    type="number"
+                                    placeholder="No limit"
+                                    className="w-32"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end gap-4 pt-4">
+                            <Button
+                                variant="ghost"
+                                asChild
+                            >
+                                <Link href="/admin/events">Cancel</Link>
+                            </Button>
+                            <Button
+                                type="submit"
+                                disabled={loading}
+                            >
+                                {loading ? "Creating..." : "Create Event"}
+                            </Button>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
         </div>
     );
 }

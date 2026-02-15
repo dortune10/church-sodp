@@ -1,14 +1,44 @@
 import { createServerComponentClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
-export const dynamic = "force-dynamic";
+import { Metadata } from "next";
+
+export const revalidate = 60;
+
+type Props = {
+    params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { id } = await params;
+    const supabase = await createServerComponentClient();
+    const { data: sermon } = await supabase
+        .from("sermons")
+        .select("title, description, preacher_name, series")
+        .eq("id", id)
+        .single();
+
+    if (!sermon) {
+        return {
+            title: "Sermon Not Found",
+        };
+    }
+
+    return {
+        title: `${sermon.title} | RCCG SODP Sermons`,
+        description: sermon.description?.slice(0, 160) || `Listen to ${sermon.title} by ${sermon.preacher_name}.`,
+        openGraph: {
+            title: sermon.title,
+            description: sermon.description?.slice(0, 160) || `Listen to ${sermon.title} by ${sermon.preacher_name}.`,
+        },
+    };
+}
 
 export default async function SermonDetailPage({
     params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
+}: Props) {
     const { id } = await params;
     const supabase = await createServerComponentClient();
     const { data: sermon } = await supabase
@@ -28,12 +58,13 @@ export default async function SermonDetailPage({
             {/* Hero */}
             <section className="bg-primary py-20 text-primary-foreground">
                 <div className="container mx-auto px-4">
-                    <Link
-                        href="/sermons"
-                        className="text-sm font-medium opacity-80 hover:opacity-100 mb-6 inline-block"
-                    >
-                        &larr; Back to Library
-                    </Link>
+                    <Breadcrumbs
+                        items={[
+                            { label: "Sermons", href: "/sermons" },
+                            { label: sermon.title },
+                        ]}
+                        className="text-primary-foreground/80 hover:text-primary-foreground"
+                    />
                     <div className="max-w-4xl">
                         <div className="flex items-center gap-4 text-sm font-medium opacity-80 mb-6">
                             <span>{preachedAt.toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })}</span>

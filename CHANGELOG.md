@@ -2,6 +2,25 @@
 
 All notable changes to the RCCG SODP Church project will be documented in this file.
 
+## [0.4.0] - 2026-02-13
+
+### Added
+- **Form Validation**: Implemented **Zod** schema validation for Contact and Prayer Request forms.
+- **Media Hub**: Created a centralized `/media` page linking to Sermons, Blog, and Gallery.
+- **Breadcrumbs**: Added navigation breadcrumbs to Sermon, Blog, and Ministry detail pages.
+- **SEO Metadata**: implemented dynamic `generateMetadata` for better search visibility on detail pages.
+- **Admin Features**: Added `ConfirmModal` for destructive actions and unique slug generation for blog posts.
+- **Mobile Responsiveness**: Updated Admin Sidebar with a mobile toggle and slide-out animation.
+- **Type-Safe Env**: Created `src/env.ts` for validated environment variable access.
+
+### Changed
+- **API Refactoring**: Refactored `contact` and `prayer` API routes to use the shared Supabase client helper.
+- **Code Quality**: Centralized site settings fetching with `getSettings()` to reduce code duplication.
+- **Middleware**: Removed debug console logs for cleaner production output.
+
+### Fixed
+- **Supabase Client Usage**: Corrected `createServerClient` usage in Server Components and API routes to ensure proper cookie handling.
+
 ## [0.3.0] - 2026-01-03
 
 ### Added

@@ -1,21 +1,50 @@
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
+import { contactSchema, prayerSchema } from "@/lib/schemas";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Label } from "@/components/ui/Label";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 export default function ContactForm() {
     const [formType, setFormType] = useState<"contact" | "prayer">("contact");
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setSuccess(false);
         setError(null);
+        setFieldErrors({});
 
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
+
+        // Validate
+        try {
+            if (formType === "contact") {
+                contactSchema.parse(data);
+            } else {
+                prayerSchema.parse(data);
+            }
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                const errors: Record<string, string> = {};
+                err.issues.forEach(e => {
+                    if (e.path[0]) errors[e.path[0].toString()] = e.message;
+                });
+                setFieldErrors(errors);
+                setLoading(false);
+                return;
+            }
+        }
 
         try {
             const endpoint = formType === "contact" ? "/api/contact" : "/api/prayer";
@@ -39,111 +68,113 @@ export default function ContactForm() {
     };
 
     return (
-        <div className="bg-muted/30 p-8 rounded-2xl border border-border transition-colors">
-            <div className="flex gap-4 mb-8">
-                <button
-                    onClick={() => setFormType("contact")}
-                    className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${formType === "contact"
-                        ? "bg-primary text-primary-foreground underline underline-offset-4"
-                        : "bg-background text-muted-foreground hover:bg-muted"
-                        }`}
-                >
-                    Contact Form
-                </button>
-                <button
-                    onClick={() => setFormType("prayer")}
-                    className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${formType === "prayer"
-                        ? "bg-secondary text-secondary-foreground underline underline-offset-4"
-                        : "bg-background text-muted-foreground hover:bg-muted"
-                        }`}
-                >
-                    Prayer Request
-                </button>
-            </div>
-
-            {success && (
-                <div className="mb-6 p-4 bg-green-100 text-green-800 rounded-md font-medium">
-                    Thank you! Your {formType === "contact" ? "message" : "request"} has been sent.
+        <Card className="bg-muted/30 border-border">
+            <CardContent className="p-8">
+                <div className="flex gap-4 mb-8">
+                    <Button
+                        onClick={() => setFormType("contact")}
+                        variant={formType === "contact" ? "default" : "ghost"}
+                        className={formType === "contact" ? "underline underline-offset-4" : ""}
+                    >
+                        Contact Form
+                    </Button>
+                    <Button
+                        onClick={() => setFormType("prayer")}
+                        variant={formType === "prayer" ? "secondary" : "ghost"}
+                        className={formType === "prayer" ? "underline underline-offset-4" : ""}
+                    >
+                        Prayer Request
+                    </Button>
                 </div>
-            )}
 
-            {error && (
-                <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-md font-medium">
-                    {error}
-                </div>
-            )}
-
-            <form className="space-y-6" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Full Name</label>
-                        <input
-                            name="fullName"
-                            type="text"
-                            required
-                            className="w-full rounded-md border-border bg-background p-2 ring-1 ring-border focus:ring-2 focus:ring-primary"
-                        />
+                {success && (
+                    <div className="mb-6 p-4 bg-green-100 text-green-800 rounded-md font-medium">
+                        Thank you! Your {formType === "contact" ? "message" : "request"} has been sent.
                     </div>
+                )}
+
+                {error && (
+                    <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-md font-medium">
+                        {error}
+                    </div>
+                )}
+
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="fullName">Full Name</Label>
+                            <Input
+                                id="fullName"
+                                name="fullName"
+                                type="text"
+                                className={fieldErrors.fullName ? "border-red-500" : ""}
+                            />
+                            {fieldErrors.fullName && <p className="text-xs text-red-500">{fieldErrors.fullName}</p>}
+                        </div>
+                        {formType === "contact" && (
+                            <div className="space-y-2">
+                                <Label htmlFor="email">Email Address</Label>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    className={fieldErrors.email ? "border-red-500" : ""}
+                                />
+                                {fieldErrors.email && <p className="text-xs text-red-500">{fieldErrors.email}</p>}
+                            </div>
+                        )}
+                    </div>
+
                     {formType === "contact" && (
-                        <div>
-                            <label className="block text-sm font-medium mb-2">Email Address</label>
-                            <input
-                                name="email"
-                                type="email"
-                                required
-                                className="w-full rounded-md border-border bg-background p-2 ring-1 ring-border focus:ring-2 focus:ring-primary"
+                        <div className="space-y-2">
+                            <Label htmlFor="subject">Subject</Label>
+                            <Input
+                                id="subject"
+                                name="subject"
+                                type="text"
                             />
                         </div>
                     )}
-                </div>
 
-                {formType === "contact" && (
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Subject</label>
-                        <input
-                            name="subject"
-                            type="text"
-                            className="w-full rounded-md border-border bg-background p-2 ring-1 ring-border focus:ring-2 focus:ring-primary"
+                    <div className="space-y-2">
+                        <Label htmlFor="message">
+                            {formType === "contact" ? "Message" : "Prayer Request"}
+                        </Label>
+                        <Textarea
+                            id="message"
+                            name={formType === "contact" ? "message" : "request"}
+                            rows={5}
+                            className={fieldErrors.message || fieldErrors.request ? "border-red-500" : ""}
                         />
+                        {(fieldErrors.message || fieldErrors.request) && (
+                            <p className="text-xs text-red-500">{fieldErrors.message || fieldErrors.request}</p>
+                        )}
                     </div>
-                )}
 
-                <div>
-                    <label className="block text-sm font-medium mb-2">
-                        {formType === "contact" ? "Message" : "Prayer Request"}
-                    </label>
-                    <textarea
-                        name={formType === "contact" ? "message" : "request"}
-                        required
-                        rows={5}
-                        className="w-full rounded-md border-border bg-background p-2 ring-1 ring-border focus:ring-2 focus:ring-primary"
-                    ></textarea>
-                </div>
+                    {formType === "prayer" && (
+                        <div className="flex items-center gap-2">
+                            <Checkbox
+                                id="sharePublicly"
+                                name="sharePublicly"
+                                defaultChecked
+                                className="border-border data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                            />
+                            <Label htmlFor="sharePublicly" className="text-muted-foreground font-normal">
+                                Share with our prayer team only (Keep private)
+                            </Label>
+                        </div>
+                    )}
 
-                {formType === "prayer" && (
-                    <div className="flex items-center gap-2">
-                        <input
-                            id="sharePublicly"
-                            name="sharePublicly"
-                            type="checkbox"
-                            defaultChecked
-                            className="rounded border-border text-primary focus:ring-primary"
-                        />
-                        <label htmlFor="sharePublicly" className="text-sm text-muted-foreground">
-                            Share with our prayer team only (Keep private)
-                        </label>
-                    </div>
-                )}
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className={`w-full py-3 rounded-md font-bold transition-opacity ${formType === "contact" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
-                        } disabled:opacity-50`}
-                >
-                    {loading ? "Sending..." : `Send ${formType === "contact" ? "Message" : "Request"}`}
-                </button>
-            </form>
-        </div>
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full"
+                        variant={formType === "contact" ? "default" : "secondary"}
+                    >
+                        {loading ? "Sending..." : `Send ${formType === "contact" ? "Message" : "Request"}`}
+                    </Button>
+                </form>
+            </CardContent>
+        </Card>
     );
 }

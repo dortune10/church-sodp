@@ -31,10 +31,14 @@
 .dark {
   --background: #0f172a;
   --foreground: #f8fafc;
+  --primary: #60a5fa;
+  --primary-foreground: #0f172a;
+  --secondary: #f59e0b;
+  --secondary-foreground: #1c1917;
+  --accent: #fbbf24;
   --muted: #1e293b;
   --muted-foreground: #94a3b8;
   --border: #334155;
-  --primary: #60a5fa;
 }
 
 body {

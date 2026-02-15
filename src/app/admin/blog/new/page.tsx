@@ -28,10 +28,26 @@ export default function NewPostPage() {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
-        const slug = (data.title as string)
+
+        const baseSlug = (data.title as string)
             .toLowerCase()
             .replace(/[^\w ]+/g, "")
             .replace(/ +/g, "-");
+
+        // Ensure slug is unique
+        let slug = baseSlug;
+        let counter = 1;
+        while (true) {
+            const { count } = await supabase
+                .from("blog_posts")
+                .select("*", { count: "exact", head: true })
+                .eq("slug", slug);
+
+            if (count === 0) break;
+
+            slug = `${baseSlug}-${counter}`;
+            counter++;
+        }
 
         const { error } = await supabase.from("blog_posts").insert([
             {
@@ -39,7 +55,7 @@ export default function NewPostPage() {
                 slug: slug,
                 excerpt: data.excerpt || null,
                 body: data.content || null,
-                thumbnail_url: data.featuredImage || null,
+                thumbnail_url: data.thumbnail_url || null,
                 status: data.status || "draft",
                 author_id: userId,
                 published_at: data.status === "published" ? new Date().toISOString() : null,
@@ -105,7 +121,7 @@ export default function NewPostPage() {
                             Featured Image URL
                         </label>
                         <input
-                            name="featuredImage"
+                            name="thumbnail_url"
                             type="url"
                             placeholder="https://images.unsplash.com/..."
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"

@@ -21,11 +21,61 @@ export default async function AdminPage() {
         .from("sermons")
         .select("*", { count: "exact", head: true });
 
+    const { count: messageCount } = await supabase
+        .from("contact_messages")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "unread");
+
+    const { count: prayerCount } = await supabase
+        .from("prayer_requests")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "new");
+
+    // Recent activity: latest items across key tables
+    const { data: recentPosts } = await supabase
+        .from("blog_posts")
+        .select("id, title, created_at")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+    const { data: recentSermons } = await supabase
+        .from("sermons")
+        .select("id, title, created_at")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+    const { data: recentMessages } = await supabase
+        .from("contact_messages")
+        .select("id, full_name, subject, created_at")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+    type ActivityItem = { label: string; time: string; href: string };
+    const activity: ActivityItem[] = [
+        ...(recentPosts || []).map((p) => ({
+            label: `Blog: ${p.title}`,
+            time: p.created_at,
+            href: `/admin/blog`,
+        })),
+        ...(recentSermons || []).map((s) => ({
+            label: `Sermon: ${s.title}`,
+            time: s.created_at,
+            href: `/admin/sermons`,
+        })),
+        ...(recentMessages || []).map((m) => ({
+            label: `Message from ${m.full_name}${m.subject ? `: ${m.subject}` : ""}`,
+            time: m.created_at,
+            href: `/admin/messages`,
+        })),
+    ]
+        .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+        .slice(0, 5);
+
     const stats = [
         { name: "Total Members", value: memberCount || 0 },
-        { name: "Active Ministries", value: ministryCount || 0 },
         { name: "Upcoming Events", value: eventCount || 0 },
-        { name: "Published Sermons", value: sermonCount || 0 },
+        { name: "Unread Messages", value: messageCount || 0 },
+        { name: "New Prayer Requests", value: prayerCount || 0 },
     ];
 
     return (
@@ -69,9 +119,22 @@ export default async function AdminPage() {
 
                 <section className="rounded-lg border border-border p-6 bg-background">
                     <h2 className="text-xl font-semibold mb-4 text-primary">Recent Activity</h2>
-                    <div className="text-sm text-muted-foreground">
-                        No recent activity to show.
-                    </div>
+                    {activity.length > 0 ? (
+                        <ul className="space-y-3">
+                            {activity.map((item, i) => (
+                                <li key={i} className="flex items-start justify-between gap-4 text-sm">
+                                    <Link href={item.href} className="text-foreground hover:text-primary transition-colors truncate flex-1">
+                                        {item.label}
+                                    </Link>
+                                    <span className="text-muted-foreground whitespace-nowrap text-xs">
+                                        {new Date(item.time).toLocaleDateString([], { month: "short", day: "numeric" })}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">No recent activity to show.</p>
+                    )}
                 </section>
             </div>
         </div>

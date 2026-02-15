@@ -1,10 +1,7 @@
-import { createServerComponentClient } from "@/lib/supabase/server";
+import { getSettings } from "@/lib/getSettings";
 
 export default async function ContactInfo() {
-    const supabase = await createServerComponentClient();
-    const { data: settings } = await supabase.from("settings").select("*");
-
-    const settingsMap = new Map(settings?.map(s => [s.key, s.value]));
+    const settingsMap = await getSettings();
 
     return (
         <div>

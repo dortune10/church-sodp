@@ -2,13 +2,42 @@ import { createServerComponentClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+import { Metadata } from "next";
+
+export const revalidate = 60;
+
+type Props = {
+    params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+    const supabase = await createServerComponentClient();
+    const { data: ministry } = await supabase
+        .from("ministries")
+        .select("name, description")
+        .eq("slug", slug)
+        .single();
+
+    if (!ministry) {
+        return {
+            title: "Ministry Not Found",
+        };
+    }
+
+    return {
+        title: `${ministry.name} | RCCG SODP Ministries`,
+        description: ministry.description?.slice(0, 160) || `Learn about ${ministry.name} ministry.`,
+        openGraph: {
+            title: ministry.name,
+            description: ministry.description?.slice(0, 160) || `Learn about ${ministry.name} ministry.`,
+        },
+    };
+}
 
 export default async function MinistryDetailPage({
     params,
-}: {
-    params: Promise<{ slug: string }>;
-}) {
+}: Props) {
     const { slug } = await params;
     const supabase = await createServerComponentClient();
     const { data: ministry } = await supabase

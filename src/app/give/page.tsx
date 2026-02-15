@@ -1,85 +1,95 @@
-import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Mail, DollarSign, Building2, Smartphone } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default function GivePage() {
   return (
-    <div className="flex flex-col">
-      <section className="bg-muted py-16 md:py-24">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">Ways to Give</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Thank you for partnering with Sanctuary of Double Perfection. Your generosity
-            supports ministry, outreach, and the work of the gospel.
+    <div className="container mx-auto px-4 py-12 max-w-5xl">
+      <div className="text-center mb-12 space-y-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-primary">Ways to Give</h1>
+        <h2 className="text-2xl font-semibold text-muted-foreground">RCCG SANCTUARY OF DOUBLE PERFECTION</h2>
+
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto pt-4">
+          Thank you for partnering with Sanctuary of Double Perfection. Your generosity supports our ministry, outreaches, and the work of the gospel.
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+        {/* Mail */}
+        <Card className="border-l-4 border-l-primary hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <div className="p-3 rounded-full bg-primary/10 text-primary">
+              <Mail className="h-6 w-6" />
+            </div>
+            <CardTitle className="text-xl">Send Checks / Money Orders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground leading-relaxed">
+              <span className="font-semibold text-foreground block mb-1">Sanctuary of Double Perfection</span>
+              1520 Commercial Park Dr.<br />
+              Lakeland, FL 33801
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Zelle */}
+        <Card className="border-l-4 border-l-[#6d28d9] hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <div className="p-3 rounded-full bg-[#6d28d9]/10 text-[#6d28d9]">
+              {/* Simple text representation or generic icon if logo unavailable */}
+              <Smartphone className="h-6 w-6" />
+            </div>
+            <CardTitle className="text-xl">Zelle</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-medium text-foreground break-all">
+              Rccgsodp2012@gmail.com
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* CashApp */}
+        <Card className="border-l-4 border-l-[#00d632] hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <div className="p-3 rounded-full bg-[#00d632]/10 text-[#00d632]">
+              <DollarSign className="h-6 w-6" />
+            </div>
+            <CardTitle className="text-xl">CashApp</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-medium text-foreground">
+              $RCCGSODP1
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Wells Fargo */}
+        <Card className="border-l-4 border-l-[#d71e28] hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <div className="p-3 rounded-full bg-[#d71e28]/10 text-[#d71e28]">
+              <Building2 className="h-6 w-6" />
+            </div>
+            <CardTitle className="text-xl">Wells Fargo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-medium text-foreground">
+              Account: 8813470500
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-16 text-center">
+        <blockquote className="bg-muted/30 p-6 rounded-xl border border-border inline-block max-w-3xl">
+          <p className="text-lg italic text-muted-foreground">
+            &ldquo;Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity; for God loveth a cheerful giver.&rdquo;
           </p>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="grid gap-10">
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-4">Online Giving</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Give securely online via our trusted payment provider. Click the button below to make a one-time gift or set up recurring giving.
-              </p>
-              <div className="mt-4">
-                <a
-                  href="#"
-                  className="inline-block bg-secondary text-secondary-foreground px-6 py-2 rounded-md font-bold hover:bg-secondary/90"
-                >
-                  Give Online
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-4">In-Person</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                You can give during weekend services in the offering envelope or at the welcome desk. Cash and checks are accepted.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-4">Mail a Gift</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Send checks to:
-              </p>
-              <p className="text-muted-foreground mt-2">
-                Sanctuary of Double Perfection
-                <br />1520 Commercial Park Dr
-                <br />Lakeland, FL 33801
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-4">Text-to-Give</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Text a gift amount to our giving number (e.g., <span className="font-semibold">(XXX) XXX-XXXX</span>) and follow the prompts to complete your donation.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-4">Bank Transfer / Direct Deposit</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                For larger gifts or recurring transfers, contact our finance team for bank details and instructions.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-primary mb-4">Questions or Assistance</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Need help setting up a gift or want to designate your giving? Email us at <a href="mailto:giving@sodp.org" className="text-secondary font-semibold">giving@sodp.org</a> or call the church office during business hours.
-              </p>
-              <div className="mt-6">
-                <Link href="/contact" className="inline-block text-secondary font-bold hover:underline">
-                  Contact Us &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <footer className="mt-2 text-sm font-bold text-primary">
+            — 2 Corinthians 9:7
+          </footer>
+        </blockquote>
+      </div>
     </div>
   );
 }

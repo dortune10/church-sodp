@@ -1,33 +1,28 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@/lib/supabase/server';
 import { NextResponse } from "next/server";
+import { prayerSchema } from "@/lib/schemas";
 
 export async function POST(request: Request) {
     try {
         const data = await request.json();
-        const cookieStore = await cookies();
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                cookies: {
-                    getAll() {
-                        return cookieStore.getAll();
-                    },
-                    setAll(cookiesToSet) {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set({ name, value, ...options })
-                        );
-                    },
-                },
-            }
-        );
+
+        // Server-side validation
+        const result = prayerSchema.safeParse(data);
+        if (!result.success) {
+            const errors = result.error.issues.map(i => ({
+                field: i.path[0],
+                message: i.message,
+            }));
+            return NextResponse.json({ error: "Validation failed", errors }, { status: 400 });
+        }
+
+        const supabase = await createServerComponentClient();
 
         const { error } = await supabase.from("prayer_requests").insert([
             {
-                full_name: data.fullName,
-                request: data.request,
-                share_publicly: data.sharePublicly === "on" ? false : true, // Note: the checkbox 'checked' sends "on" or null
+                full_name: result.data.fullName,
+                request: result.data.request,
+                share_publicly: result.data.sharePublicly === "on" ? false : true,
             },
         ]);
 

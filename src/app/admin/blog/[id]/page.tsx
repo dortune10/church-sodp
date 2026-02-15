@@ -1,10 +1,12 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { BlogPost } from "@/types/database";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function EditPostPage() {
     const { id } = useParams();
@@ -46,7 +48,7 @@ export default function EditPostPage() {
             title: data.title as string,
             excerpt: (data.excerpt as string) || null,
             body: (data.content as string) || null,
-            thumbnail_url: (data.featuredImage as string) || null,
+            thumbnail_url: (data.thumbnail_url as string) || null,
             status: data.status as 'draft' | 'published',
         };
 
@@ -69,15 +71,16 @@ export default function EditPostPage() {
         }
     };
 
-    const handleDelete = async () => {
-        if (!confirm("Are you sure you want to delete this post?")) return;
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    const handleDelete = async () => {
         setSaving(true);
         const { error } = await supabase.from("blog_posts").delete().eq("id", id);
 
         if (error) {
             setError(error.message);
             setSaving(false);
+            setShowDeleteModal(false);
         } else {
             router.push("/admin/blog");
             router.refresh();
@@ -89,6 +92,16 @@ export default function EditPostPage() {
 
     return (
         <div className="max-w-4xl mx-auto">
+            <ConfirmModal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDelete}
+                title="Delete Post"
+                message="Are you sure you want to delete this post? This action cannot be undone."
+                confirmLabel="Delete Forever"
+                isDestructive={true}
+                isLoading={saving}
+            />
             <div className="mb-8 flex items-center justify-between">
                 <div className="flex-1">
                     <Link
@@ -100,7 +113,7 @@ export default function EditPostPage() {
                     <h1 className="text-3xl font-bold text-primary">Edit Blog Post</h1>
                 </div>
                 <button
-                    onClick={handleDelete}
+                    onClick={() => setShowDeleteModal(true)}
                     className="text-sm font-medium text-red-600 hover:text-red-800 underline underline-offset-4"
                 >
                     Delete Post
@@ -145,7 +158,7 @@ export default function EditPostPage() {
                             Featured Image URL
                         </label>
                         <input
-                            name="featuredImage"
+                            name="thumbnail_url"
                             type="url"
                             defaultValue={post.thumbnail_url || ""}
                             className="w-full rounded-md border-border bg-background px-3 py-2 text-sm ring-1 ring-border focus:ring-2 focus:ring-primary outline-none"

@@ -2,14 +2,45 @@ import { createServerComponentClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
-export const dynamic = "force-dynamic";
+import { Metadata } from "next";
+
+export const revalidate = 60;
+
+type Props = {
+    params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+    const supabase = await createServerComponentClient();
+    const { data: post } = await supabase
+        .from("blog_posts")
+        .select("title, excerpt, thumbnail_url")
+        .eq("slug", slug)
+        .single();
+
+    if (!post) {
+        return {
+            title: "Post Not Found",
+        };
+    }
+
+    return {
+        title: `${post.title} | RCCG SODP Blog`,
+        description: post.excerpt || `Read ${post.title} on our blog.`,
+        openGraph: {
+            title: post.title,
+            description: post.excerpt || `Read ${post.title} on our blog.`,
+            images: post.thumbnail_url ? [post.thumbnail_url] : [],
+        },
+    };
+}
 
 export default async function BlogPostDetailPage({
     params,
-}: {
-    params: Promise<{ slug: string }>;
-}) {
+}: Props) {
     const { slug } = await params;
     const supabase = await createServerComponentClient();
     const { data: post } = await supabase
@@ -29,12 +60,12 @@ export default async function BlogPostDetailPage({
             {/* Article Header */}
             <section className="bg-background pt-20 pb-16">
                 <div className="container mx-auto px-4 max-w-3xl">
-                    <Link
-                        href="/blog"
-                        className="text-sm font-medium text-muted-foreground hover:text-primary mb-8 inline-block"
-                    >
-                        &larr; Back to Feed
-                    </Link>
+                    <Breadcrumbs
+                        items={[
+                            { label: "Blog", href: "/blog" },
+                            { label: post.title },
+                        ]}
+                    />
                     <div className="flex items-center gap-4 text-sm font-bold text-muted-foreground mb-6">
                         {publishedAt && (
                             <span>{publishedAt.toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })}</span>

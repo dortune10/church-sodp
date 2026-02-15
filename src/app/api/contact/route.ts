@@ -1,34 +1,29 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@/lib/supabase/server';
 import { NextResponse } from "next/server";
+import { contactSchema } from "@/lib/schemas";
 
 export async function POST(request: Request) {
     try {
         const data = await request.json();
-        const cookieStore = await cookies();
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                cookies: {
-                    getAll() {
-                        return cookieStore.getAll();
-                    },
-                    setAll(cookiesToSet) {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set({ name, value, ...options })
-                        );
-                    },
-                },
-            }
-        );
+
+        // Server-side validation
+        const result = contactSchema.safeParse(data);
+        if (!result.success) {
+            const errors = result.error.issues.map(i => ({
+                field: i.path[0],
+                message: i.message,
+            }));
+            return NextResponse.json({ error: "Validation failed", errors }, { status: 400 });
+        }
+
+        const supabase = await createServerComponentClient();
 
         const { error } = await supabase.from("contact_messages").insert([
             {
-                full_name: data.fullName,
-                email: data.email,
-                subject: data.subject,
-                message: data.message,
+                full_name: result.data.fullName,
+                email: result.data.email,
+                subject: result.data.subject,
+                message: result.data.message,
             },
         ]);
 

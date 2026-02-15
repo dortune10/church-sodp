@@ -1,7 +1,7 @@
 import { createServerComponentClient } from "@/lib/supabase/server";
 import EventsCalendar from "@/components/EventsCalendar";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function EventsPage() {
     const supabase = await createServerComponentClient();
@@ -93,7 +93,7 @@ export default async function EventsPage() {
                     Friday: 'Online Prayer Meeting',
                 };
                 items.push({
-                    id: `synthetic-${dayName.toLowerCase()}-${date.toISOString().slice(0,10)}`,
+                    id: `synthetic-${dayName.toLowerCase()}-${date.toISOString().slice(0, 10)}`,
                     title: titles[dayName],
                     start_at: date.toISOString(),
                     description: dayName === 'Sunday' ? 'Sunday (Online/Onsite)' : undefined,
@@ -116,7 +116,7 @@ export default async function EventsPage() {
             if (day !== 0) firstSunday.setDate(firstSunday.getDate() + (7 - day));
             firstSunday.setHours(10, 0, 0, 0);
             if (firstSunday.getMonth() === m) {
-                items.push({ id: `monthly-thanksgiving-${firstSunday.toISOString().slice(0,10)}`, title: 'Thanksgiving', start_at: firstSunday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
+                items.push({ id: `monthly-thanksgiving-${firstSunday.toISOString().slice(0, 10)}`, title: 'Thanksgiving', start_at: firstSunday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
             }
 
             // 3rd Sunday (approx day 15-21)
@@ -124,7 +124,7 @@ export default async function EventsPage() {
             thirdSunday.setDate(thirdSunday.getDate() + 14);
             thirdSunday.setHours(10, 0, 0, 0);
             if (thirdSunday.getMonth() === m) {
-                items.push({ id: `monthly-youth-${thirdSunday.toISOString().slice(0,10)}`, title: 'Youth Sunday', start_at: thirdSunday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
+                items.push({ id: `monthly-youth-${thirdSunday.toISOString().slice(0, 10)}`, title: 'Youth Sunday', start_at: thirdSunday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
             }
 
             // Last Friday
@@ -132,13 +132,13 @@ export default async function EventsPage() {
             // move back to Friday
             while (lastFriday.getDay() !== 5) lastFriday.setDate(lastFriday.getDate() - 1);
             lastFriday.setHours(22, 0, 0, 0);
-            items.push({ id: `monthly-vigil-${lastFriday.toISOString().slice(0,10)}`, title: 'Vigil / Communion', start_at: lastFriday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
+            items.push({ id: `monthly-vigil-${lastFriday.toISOString().slice(0, 10)}`, title: 'Vigil / Communion', start_at: lastFriday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
 
             // Last Sunday (Anointing)
             const lastSunday = new Date(lastOfMonth);
             while (lastSunday.getDay() !== 0) lastSunday.setDate(lastSunday.getDate() - 1);
             lastSunday.setHours(10, 0, 0, 0);
-            items.push({ id: `monthly-anointing-${lastSunday.toISOString().slice(0,10)}`, title: 'Anointing', start_at: lastSunday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
+            items.push({ id: `monthly-anointing-${lastSunday.toISOString().slice(0, 10)}`, title: 'Anointing', start_at: lastSunday.toISOString(), category: 'Monthly', location: 'Online / Onsite', registration_required: false });
 
             // 2nd Saturday - Yoruba Libration Hour (Online) 6:00 AM
             const secondSaturday = new Date(firstOfMonth);
@@ -148,7 +148,7 @@ export default async function EventsPage() {
             secondSaturday.setDate(secondSaturday.getDate() + 7);
             secondSaturday.setHours(6, 0, 0, 0);
             if (secondSaturday.getMonth() === m) {
-                items.push({ id: `monthly-yoruba-${secondSaturday.toISOString().slice(0,10)}`, title: 'Yoruba Libration Hour', start_at: secondSaturday.toISOString(), category: 'Monthly', location: 'Online', registration_required: false });
+                items.push({ id: `monthly-yoruba-${secondSaturday.toISOString().slice(0, 10)}`, title: 'Yoruba Libration Hour', start_at: secondSaturday.toISOString(), category: 'Monthly', location: 'Online', registration_required: false });
             }
         }
 
