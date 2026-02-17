@@ -3,7 +3,12 @@ import Image from "next/image";
 import { getSettings } from "@/lib/getSettings";
 
 export default async function Home() {
-  const settingsMap = await getSettings();
+  let settingsMap = new Map<string, string>();
+  try {
+    settingsMap = await getSettings();
+  } catch (e) {
+    console.error("Home: Failed to load settings", e);
+  }
 
   return (
     <div className="flex flex-col">

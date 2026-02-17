@@ -3,15 +3,27 @@ import { getSettings } from "@/lib/getSettings";
 import { createServerComponentClient } from "@/lib/supabase/server";
 
 export default async function Footer() {
-    const settingsMap = await getSettings();
-    const supabase = await createServerComponentClient();
+    let settingsMap = new Map<string, string>();
+    let events: { id: string; title: string; start_at: string }[] | null = null;
 
-    const { data: events } = await supabase
-        .from("events")
-        .select("id, title, start_at")
-        .gte("start_at", new Date().toISOString())
-        .order("start_at", { ascending: true })
-        .limit(3);
+    try {
+        settingsMap = await getSettings();
+    } catch (e) {
+        console.error("Footer: Failed to load settings", e);
+    }
+
+    try {
+        const supabase = await createServerComponentClient();
+        const { data } = await supabase
+            .from("events")
+            .select("id, title, start_at")
+            .gte("start_at", new Date().toISOString())
+            .order("start_at", { ascending: true })
+            .limit(3);
+        events = data;
+    } catch (e) {
+        console.error("Footer: Failed to load events", e);
+    }
 
     return (
         <footer className="w-full border-t border-border bg-muted/50 py-12">
