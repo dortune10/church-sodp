@@ -5,5 +5,7 @@ services:
     restart: always
     ports:
       - "3330:3330"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
